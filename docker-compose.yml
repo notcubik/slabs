@@ -1,0 +1,32 @@
+services:
+  slabs:
+    image: ghcr.io/notcubik/slabs:0.30.1
+    container_name: slabs
+    ports:
+      - "3000:3000"
+    volumes:
+      - slabs-data:/data
+    environment:
+      - NODE_ENV=production
+      - DATA_DIR=/data
+      - DATABASE_URL=/data/slabs.db
+      - ORIGIN=${ORIGIN:-http://localhost:3000}
+      # OAuth / SSO (optional — providers auto-enable when configured)
+      - AUTH_GOOGLE_CLIENT_ID=${AUTH_GOOGLE_CLIENT_ID:-}
+      - AUTH_GOOGLE_CLIENT_SECRET=${AUTH_GOOGLE_CLIENT_SECRET:-}
+      - AUTH_GITHUB_CLIENT_ID=${AUTH_GITHUB_CLIENT_ID:-}
+      - AUTH_GITHUB_CLIENT_SECRET=${AUTH_GITHUB_CLIENT_SECRET:-}
+      - AUTH_OIDC_ISSUER=${AUTH_OIDC_ISSUER:-}
+      - AUTH_OIDC_CLIENT_ID=${AUTH_OIDC_CLIENT_ID:-}
+      - AUTH_OIDC_CLIENT_SECRET=${AUTH_OIDC_CLIENT_SECRET:-}
+      - AUTH_OIDC_DISPLAY_NAME=${AUTH_OIDC_DISPLAY_NAME:-}
+      # Email notifications (optional — auto-enabled when SMTP_HOST is set)
+      - SMTP_HOST=${SMTP_HOST:-}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USER=${SMTP_USER:-}
+      - SMTP_PASS=${SMTP_PASS:-}
+      - SMTP_FROM=${SMTP_FROM:-}
+    restart: unless-stopped
+
+volumes:
+  slabs-data:

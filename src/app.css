@@ -1,0 +1,318 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;1,400&display=swap');
+
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+:root {
+	--bg-base: #f8f9fc;
+	--bg-surface: #ffffff;
+	--primary: #3B82F6;
+	--primary-hover: #2563EB;
+	--text: #111827;
+	--text-muted: #6B7280;
+	--border: #E5E7EB;
+	--border-subtle: #F3F4F6;
+	--destructive: #EF4444;
+	--error-bg: #FEF2F2;
+	--error-border: #FECACA;
+	--error-text: #B91C1C;
+	--success-bg: #F0FDF4;
+	--success-text: #166534;
+	--card-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+	--card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="dark"] {
+	--bg-base: #0f1117;
+	--bg-surface: #1a1d27;
+	--primary: #60A5FA;
+	--primary-hover: #93C5FD;
+	--text: #F9FAFB;
+	--text-muted: #9CA3AF;
+	--border: #374151;
+	--border-subtle: #1F2937;
+	--destructive: #F87171;
+	--error-bg: #451A1A;
+	--error-border: #7F1D1D;
+	--error-text: #FCA5A5;
+	--success-bg: #14532D;
+	--success-text: #86EFAC;
+	--card-shadow: 0 1px 3px rgba(0, 0, 0, 0.24);
+	--card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.36);
+}
+
+/* Color scheme overrides — accent colors per theme */
+[data-color="slates"] { --primary: #3B82F6; --primary-hover: #2563EB; }
+[data-color="slates"][data-theme="dark"] { --primary: #60A5FA; --primary-hover: #93C5FD; }
+
+[data-color="amber"] { --primary: #F59E0B; --primary-hover: #D97706; }
+[data-color="amber"][data-theme="dark"] { --primary: #FBBF24; --primary-hover: #FCD34D; }
+
+[data-color="emerald"] { --primary: #10B981; --primary-hover: #059669; }
+[data-color="emerald"][data-theme="dark"] { --primary: #34D399; --primary-hover: #6EE7B7; }
+
+[data-color="ocean"] { --primary: #06B6D4; --primary-hover: #0891B2; }
+[data-color="ocean"][data-theme="dark"] { --primary: #22D3EE; --primary-hover: #67E8F9; }
+
+[data-color="violet"] { --primary: #8B5CF6; --primary-hover: #7C3AED; }
+[data-color="violet"][data-theme="dark"] { --primary: #A78BFA; --primary-hover: #C4B5FD; }
+
+[data-color="rose"] { --primary: #F43F5E; --primary-hover: #E11D48; }
+[data-color="rose"][data-theme="dark"] { --primary: #FB7185; --primary-hover: #FDA4AF; }
+
+html, body {
+	font-family: 'Inter', system-ui, sans-serif;
+	accent-color: var(--primary);
+	overscroll-behavior-y: none;
+}
+
+body.editor-scroll-locked {
+	overflow: hidden;
+}
+
+/* Editor entrance animations */
+@keyframes fade-in {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@keyframes pop-in {
+	from { opacity: 0; transform: scale(0.95) translateY(8px); }
+	to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes slide-up {
+	from { transform: translateY(100%); }
+	to { transform: translateY(0); }
+}
+
+/* Prose overrides */
+.prose {
+	--tw-prose-body: var(--text);
+	--tw-prose-headings: var(--text);
+	--tw-prose-links: var(--primary);
+	--tw-prose-code: var(--text);
+	--tw-prose-pre-bg: var(--bg-surface);
+	--tw-prose-pre-code: var(--text);
+}
+
+.prose :where(code):not(:where([class~="not-prose"] *)) {
+	font-family: 'JetBrains Mono', monospace;
+	background-color: color-mix(in srgb, var(--text) 6%, transparent);
+	border-radius: 4px;
+	padding: 0.125rem 0.375rem;
+	font-size: 0.875em;
+}
+
+.prose :where(a):not(:where([class~="not-prose"] *)) {
+	color: var(--primary);
+}
+
+.prose :where(a):not(:where([class~="not-prose"] *)):hover {
+	color: var(--primary-hover);
+}
+
+.tiptap code {
+	font-family: 'JetBrains Mono', monospace;
+	background-color: color-mix(in srgb, var(--text) 6%, transparent);
+	border-radius: 4px;
+	padding: 0.125rem 0.375rem;
+	font-size: 0.875em;
+}
+
+/* Table styles for TipTap editor */
+.tiptap table {
+	border-collapse: collapse;
+	width: 100%;
+	margin: 0.5rem 0;
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+.tiptap th,
+.tiptap td {
+	border: 1px solid var(--border);
+	padding: 0.5rem 0.75rem;
+	text-align: left;
+	vertical-align: top;
+	min-width: 4rem;
+}
+
+.tiptap th {
+	font-weight: 600;
+	background-color: var(--border-subtle);
+}
+
+.tiptap td p,
+.tiptap th p {
+	margin: 0;
+}
+
+.tiptap .selectedCell {
+	background-color: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
+/* Task list styles — shared between TipTap editor and markdown-it preview */
+
+/* TipTap: ul[data-type="taskList"]  |  markdown-it: ul.task-list */
+.tiptap ul[data-type="taskList"],
+.prose ul.task-list {
+	list-style: none;
+	padding-left: 0;
+	margin: 0.25rem 0;
+}
+
+.tiptap ul[data-type="taskList"] li,
+.prose ul.task-list li {
+	display: flex;
+	align-items: flex-start;
+	flex-wrap: wrap;
+	gap: 0.375rem;
+	margin: 0;
+	padding: 0;
+}
+
+/* Nested task lists take full width below the parent item */
+.tiptap ul[data-type="taskList"] li > ul[data-type="taskList"],
+.prose ul.task-list li > ul.task-list {
+	flex-basis: 100%;
+	padding-left: 1.5rem;
+}
+
+.tiptap ul[data-type="taskList"] li::marker,
+.prose ul.task-list li::marker {
+	content: none;
+}
+
+/* TipTap: checkbox is inside a label */
+.tiptap ul[data-type="taskList"] li label {
+	display: flex;
+	align-items: center;
+	flex-shrink: 0;
+	margin-top: 0.125rem;
+}
+
+/* Shared checkbox styles */
+.tiptap ul[data-type="taskList"] li label input[type="checkbox"],
+.prose ul.task-list .task-checkbox {
+	cursor: pointer;
+	margin: 0;
+	margin-top: 0.2em;
+	flex-shrink: 0;
+}
+
+/* TipTap: text content is in a div>p */
+.tiptap ul[data-type="taskList"] li > div {
+	flex: 1;
+	min-width: 0;
+}
+
+.tiptap ul[data-type="taskList"] li > div p {
+	margin: 0;
+}
+
+/* Checked item styling */
+.tiptap ul[data-type="taskList"] li[data-checked="true"] > div {
+	text-decoration: line-through;
+	color: var(--text-muted);
+}
+
+/* Override prose spacing for task lists */
+.prose ul[data-type="taskList"],
+.prose ul.task-list {
+	padding-left: 0;
+	margin-top: 0.25rem;
+	margin-bottom: 0.25rem;
+}
+
+.prose ul[data-type="taskList"] li,
+.prose ul.task-list li {
+	padding-left: 0;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.prose ul.task-list li p {
+	margin: 0;
+}
+
+/* Checklist link styles */
+.checklist-link {
+	color: var(--primary);
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.checklist-link:hover {
+	color: var(--primary-hover);
+}
+
+[data-placeholder]:empty::before {
+	content: attr(data-placeholder);
+	color: var(--text-muted);
+	pointer-events: none;
+}
+
+/* Custom tooltips */
+.tooltip-popup {
+	position: fixed;
+	z-index: 9999;
+	padding: 0.375rem 0.625rem;
+	font-family: 'Inter', system-ui, sans-serif;
+	font-size: 0.75rem;
+	font-weight: 500;
+	line-height: 1.4;
+	color: var(--bg-surface);
+	background: var(--text);
+	border-radius: 8px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	pointer-events: none;
+	white-space: nowrap;
+	opacity: 0;
+	transition: opacity 100ms ease-out;
+}
+
+.tooltip-visible {
+	opacity: 1;
+}
+
+/* Focus-visible styles for keyboard navigation */
+*:focus-visible {
+	outline: 2px solid var(--primary);
+	outline-offset: 2px;
+	border-radius: 4px;
+}
+
+button:focus-visible,
+a:focus-visible {
+	outline: 2px solid var(--primary);
+	outline-offset: 2px;
+}
+
+/* Skip to main content link */
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border-width: 0;
+}
+
+.sr-only-focusable:focus {
+	position: static;
+	width: auto;
+	height: auto;
+	padding: 0.5rem 1rem;
+	margin: 0;
+	overflow: visible;
+	clip: auto;
+	white-space: normal;
+	background: var(--bg-surface);
+	color: var(--primary);
+	font-weight: 600;
+	z-index: 9999;
+}
