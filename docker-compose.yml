@@ -1,6 +1,6 @@
 services:
   slabs:
-    image: ghcr.io/notcubik/slabs:0.30.1
+    build: .
     container_name: slabs
     ports:
       - "3000:3000"
