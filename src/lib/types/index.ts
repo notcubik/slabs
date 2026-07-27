@@ -9,6 +9,7 @@ export interface Note {
 	trashedAt: Date | null;
 	checklistMode: boolean;
 	sortOrder: number;
+	isHidden: boolean;
 	createdAt: Date;
 	updatedAt: Date;
 	version: number;
@@ -46,6 +47,8 @@ export interface NoteUpdate {
 	checklistMode?: boolean;
 	sortOrder?: number;
 	tags?: string[];
+	isHidden?: boolean;
+	hiddenPassword?: string;
 }
 
 export interface Attachment {

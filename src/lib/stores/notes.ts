@@ -179,6 +179,7 @@ export async function createNote(note: NoteCreate): Promise<Note | null> {
 				trashedAt: null,
 				checklistMode: note.checklistMode ?? false,
 				sortOrder: 0,
+				isHidden: false,
 				createdAt: now,
 				updatedAt: now,
 				version: 1,
@@ -241,6 +242,25 @@ export async function updateNote(id: string, updates: NoteUpdate): Promise<Note 
 			}
 			return optimistic;
 		}
+		return null;
+	}
+}
+
+export async function unlockNote(id: string, password: string): Promise<Note | null> {
+	try {
+		const res = await fetch(`/api/notes/${id}/unlock`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ password })
+		});
+		if (res.ok) {
+			const unlocked: Note = await res.json();
+			notes.update((list) => list.map((n) => (n.id === id ? unlocked : n)));
+			await putNote(unlocked);
+			return unlocked;
+		}
+		return null;
+	} catch {
 		return null;
 	}
 }

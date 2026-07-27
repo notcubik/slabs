@@ -18,7 +18,7 @@ export const GET: RequestHandler = async ({ params, ...event }) => {
 export const PATCH: RequestHandler = async ({ params, request, ...event }) => {
 	const userId = getUserId(event);
 	const body = await request.json();
-	const updated = updateNote(db, userId, params.id, body);
+	const updated = await updateNote(db, userId, params.id, body);
 	if (!updated) throw error(404, 'Note not found');
 
 	return json(updated);

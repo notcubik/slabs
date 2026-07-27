@@ -8,12 +8,13 @@
 		notes: Note[];
 		label?: string;
 		onEdit: (note: Note) => void;
+		onUnlock?: (note: Note) => void;
 		draggable?: boolean;
 		dndType?: string;
 		onReorder?: (noteIds: string[]) => void;
 	}
 
-	let { notes, label = '', onEdit, draggable = false, dndType = 'notes', onReorder }: Props = $props();
+	let { notes, label = '', onEdit, onUnlock, draggable = false, dndType = 'notes', onReorder }: Props = $props();
 
 	let localItems = $state<Note[]>([]);
 
@@ -47,19 +48,19 @@
 			onconsider={handleConsider}
 			onfinalize={handleFinalize}
 		>
-			{#each localItems as note (note.id)}
-				<div class="mb-4 break-inside-avoid outline-none" animate:flip={{ duration: flipDurationMs }}>
-					<NoteCard {note} {onEdit} />
-				</div>
-			{/each}
-		</div>
-	{:else}
-		<div class="columns-1 gap-4 sm:columns-2 md:columns-3 lg:columns-4" data-testid="note-grid">
-			{#each displayItems as note (note.id)}
-				<div class="mb-4 break-inside-avoid">
-					<NoteCard {note} {onEdit} />
-				</div>
-			{/each}
+		{#each localItems as note (note.id)}
+			<div class="mb-4 break-inside-avoid outline-none" animate:flip={{ duration: flipDurationMs }}>
+				<NoteCard {note} {onEdit} {onUnlock} />
+			</div>
+		{/each}
+	</div>
+{:else}
+	<div class="columns-1 gap-4 sm:columns-2 md:columns-3 lg:columns-4" data-testid="note-grid">
+		{#each displayItems as note (note.id)}
+			<div class="mb-4 break-inside-avoid">
+				<NoteCard {note} {onEdit} {onUnlock} />
+			</div>
+		{/each}
 		</div>
 	{/if}
 {/if}

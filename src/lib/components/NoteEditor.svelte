@@ -13,9 +13,9 @@
 	import ImageUpload from './ImageUpload.svelte';
 	import ShareDialog from './ShareDialog.svelte';
 	import NoteHistory from './NoteHistory.svelte';
+	import PasswordModal from './PasswordModal.svelte';
 	import TagInput from './TagInput.svelte';
-	import { updateNote, createNote, trashNote, archiveNote } from '$lib/stores/notes.js';
-	import { notes } from '$lib/stores/notes.js';
+	import { updateNote, createNote, trashNote, archiveNote, notes } from '$lib/stores/notes.js';
 	import { getNoteColor } from '$lib/utils/colors.js';
 	import { getIsDarkMode } from '$lib/utils/theme.svelte.js';
 	import { getPreferences } from '$lib/stores/preferences.svelte.js';
@@ -35,6 +35,8 @@
 	import Trash2 from 'lucide-svelte/icons/trash-2';
 	import ListX from 'lucide-svelte/icons/list-x';
 	import Archive from 'lucide-svelte/icons/archive';
+	import Lock from 'lucide-svelte/icons/lock';
+	import LockOpen from 'lucide-svelte/icons/lock-open';
 	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
 	import { parseChecklist, serializeChecklist } from '$lib/utils/checklist.js';
 	import { tooltip } from '$lib/utils/tooltip.js';
@@ -256,6 +258,11 @@
 	let mobileOverflowBtnEl: HTMLButtonElement | undefined = $state();
 	let overflowAnchorEl: HTMLButtonElement | undefined = $state();
 	let overflowMenuEl: HTMLDivElement | undefined = $state();
+
+	// Hidden note state
+	let isHidden = $state(note?.isHidden ?? false);
+	let showHideModal = $state(false);
+	let hideModalMode = $state<'hide' | 'unhide'>('hide');
 
 	// Close overflow menu when clicking outside
 	$effect(() => {
@@ -546,6 +553,48 @@
 		content = serializeChecklist(items);
 		showOverflowMenu = false;
 	}
+
+	function handleShowHideModal(mode: 'hide' | 'unhide') {
+		showOverflowMenu = false;
+		hideModalMode = mode;
+		showHideModal = true;
+	}
+
+	async function handleHideSubmit(password: string) {
+		if (!noteId) return;
+		const updated = await updateNote(noteId, {
+			isHidden: true,
+			hiddenPassword: password
+		});
+		if (updated) {
+			isHidden = true;
+			showHideModal = false;
+			dismissOverlay();
+		} else {
+			throw new Error('Failed to hide note');
+		}
+	}
+
+	async function handleUnhideSubmit(password: string) {
+		if (!noteId) return;
+		// First verify password via unlock endpoint
+		const res = await fetch(`/api/notes/${noteId}/unlock`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ password })
+		});
+		if (!res.ok) {
+			throw new Error('Invalid password');
+		}
+		// Then unhide
+		const updated = await updateNote(noteId, { isHidden: false });
+		if (updated) {
+			isHidden = false;
+			showHideModal = false;
+		} else {
+			throw new Error('Failed to unhide note');
+		}
+	}
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -820,18 +869,39 @@
 					</div>
 				{/if}
 
-				<!-- Archive -->
-				{#if !currentlyNew}
+			<!-- Archive -->
+			{#if !currentlyNew}
+				<button
+					onclick={handleArchive}
+					class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-[var(--text)] hover:bg-[var(--border)]/10"
+				>
+					<Archive class="h-4 w-4" />
+					Archive
+				</button>
+			{/if}
+
+			<!-- Hide/Unhide (mobile, owner only) -->
+			{#if !currentlyNew && isOwner}
+				{#if isHidden}
 					<button
-						onclick={handleArchive}
+						onclick={() => handleShowHideModal('unhide')}
 						class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-[var(--text)] hover:bg-[var(--border)]/10"
 					>
-						<Archive class="h-4 w-4" />
-						Archive
+						<LockOpen class="h-4 w-4" />
+						Unhide note
+					</button>
+				{:else}
+					<button
+						onclick={() => handleShowHideModal('hide')}
+						class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-[var(--text)] hover:bg-[var(--border)]/10"
+					>
+						<Lock class="h-4 w-4" />
+						Hide note
 					</button>
 				{/if}
+			{/if}
 
-				<!-- Save now (mobile) -->
+			<!-- Save now (mobile) -->
 				{#if saveStatus === 'unsaved' || saveStatus === 'error'}
 					<button
 						onclick={() => { clearTimeout(autoSaveTimer); performSave(); showOverflowMenu = false; }}
@@ -886,6 +956,29 @@
 					<History class="h-4 w-4 {showHistory ? 'text-[var(--primary)]' : ''}" />
 					Version history
 				</button>
+			{/if}
+
+			<!-- Hide/Unhide (only for saved notes, owner only) -->
+			{#if !currentlyNew && isOwner}
+				{#if isHidden}
+					<button
+						onclick={() => handleShowHideModal('unhide')}
+						class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-[var(--text)] hover:bg-[var(--border)]/10"
+						data-testid="unhide-note-btn"
+					>
+						<LockOpen class="h-4 w-4" />
+						Unhide note
+					</button>
+				{:else}
+					<button
+						onclick={() => handleShowHideModal('hide')}
+						class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-[var(--text)] hover:bg-[var(--border)]/10"
+						data-testid="hide-note-btn"
+					>
+						<Lock class="h-4 w-4" />
+						Hide note
+					</button>
+				{/if}
 			{/if}
 
 			<!-- Trash (only for saved notes) -->
@@ -946,4 +1039,24 @@
 		onClose={() => (showHistory = false)}
 		onRestored={handleHistoryRestored}
 	/>
+{/if}
+
+{#if showHideModal}
+	{#if hideModalMode === 'hide'}
+		<PasswordModal
+			title="Hide note"
+			description="Set a password to hide this note. You'll need this password to view or unhide it later."
+			submitLabel="Hide"
+			onSubmit={handleHideSubmit}
+			onClose={() => { showHideModal = false; }}
+		/>
+	{:else}
+		<PasswordModal
+			title="Unhide note"
+			description="Enter the password to unhide this note."
+			submitLabel="Unhide"
+			onSubmit={handleUnhideSubmit}
+			onClose={() => { showHideModal = false; }}
+		/>
+	{/if}
 {/if}

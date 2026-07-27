@@ -14,6 +14,7 @@ function makeNote(overrides: Partial<Note> = {}): Note {
 		trashedAt: null,
 		checklistMode: false,
 		sortOrder: 0,
+		isHidden: false,
 		createdAt: new Date('2024-01-01'),
 		updatedAt: new Date('2024-01-01'),
 		version: 1,

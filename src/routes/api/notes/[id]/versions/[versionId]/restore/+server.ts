@@ -16,7 +16,7 @@ export const POST: RequestHandler = async ({ params, ...event }) => {
 	snapshotCurrentNote(db, params.id);
 
 	// Apply the restored content (updateNote will increment version + create a new snapshot)
-	const restored = updateNote(db, userId, params.id, {
+	const restored = await updateNote(db, userId, params.id, {
 		title: version.title,
 		content: version.content,
 		checklistMode: version.checklistMode,

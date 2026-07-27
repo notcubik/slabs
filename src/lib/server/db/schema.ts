@@ -40,6 +40,8 @@ export const notes = sqliteTable(
 		trashedAt: integer('trashed_at', { mode: 'timestamp' }),
 		checklistMode: integer('checklist_mode', { mode: 'boolean' }).default(false).notNull(),
 		sortOrder: integer('sort_order').default(0).notNull(),
+		isHidden: integer('is_hidden', { mode: 'boolean' }).default(false).notNull(),
+		hiddenPasswordHash: text('hidden_password_hash'),
 		createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 		updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
 		version: integer('version').default(1).notNull()

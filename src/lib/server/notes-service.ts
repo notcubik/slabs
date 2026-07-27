@@ -11,6 +11,7 @@ import { canAccessNote } from './api-utils.js';
 import { createSnapshot, getBaseContent } from './versions-service.js';
 import { mergeContentUpdate } from '$lib/utils/content-merge.js';
 import type { NoteFilter } from '$lib/types/index.js';
+import * as argon2 from 'argon2';
 
 interface NoteRow {
 	id: string;
@@ -24,6 +25,7 @@ interface NoteRow {
 	trashedAt: Date | null;
 	checklistMode: boolean;
 	sortOrder: number;
+	isHidden: boolean;
 	createdAt: Date;
 	updatedAt: Date;
 	version: number;
@@ -40,10 +42,17 @@ function hydrateNotes(db: Db, noteRows: NoteRow[], userId: number) {
 		const collaborators = collabMap.get(note.id) ?? [];
 		const isOwner = note.userId === userId;
 		const isShared = collaborators.length > 0;
+
+		const isHidden = note.isHidden;
+		const strippedNote = isHidden
+			? { ...note, title: '', content: '' }
+			: note;
+
 		return {
-			...note,
-			tags: tagMap.get(note.id) ?? [],
-			attachments: attachmentMap.get(note.id) ?? [],
+			...strippedNote,
+			isHidden,
+			tags: isHidden ? [] : (tagMap.get(note.id) ?? []),
+			attachments: isHidden ? [] : (attachmentMap.get(note.id) ?? []),
 			collaborators,
 			isOwner,
 			isShared,
@@ -69,6 +78,7 @@ function getSharedNotes(db: Db, userId: number, filter: 'all' | 'archived'): Not
 			trashedAt: notes.trashedAt,
 			checklistMode: notes.checklistMode,
 			sortOrder: sql<number>`COALESCE(${noteUserState.sortOrder}, 0)`.as('user_sort_order'),
+			isHidden: notes.isHidden,
 			createdAt: notes.createdAt,
 			updatedAt: notes.updatedAt,
 			version: notes.version
@@ -185,6 +195,7 @@ export function createNote(db: Db, userId: number, input: CreateNoteInput) {
 		trashedAt: null,
 		checklistMode: input.checklistMode || false,
 		sortOrder: input.sortOrder || 0,
+		isHidden: false,
 		createdAt: now,
 		updatedAt: now,
 		version: 1
@@ -213,12 +224,14 @@ export interface UpdateNoteInput {
 	sortOrder?: number;
 	baseVersion?: number;
 	tags?: string[];
+	isHidden?: boolean;
+	hiddenPassword?: string;
 }
 
 /** Per-user fields that go to noteUserState for collaborators */
 const PER_USER_FIELDS = ['pinned', 'archived', 'sortOrder'] as const;
 
-export function updateNote(db: Db, userId: number, id: string, input: UpdateNoteInput) {
+export async function updateNote(db: Db, userId: number, id: string, input: UpdateNoteInput) {
 	const { canAccess, isOwner } = canAccessNote(db, id, userId);
 	if (!canAccess) return null;
 
@@ -227,6 +240,11 @@ export function updateNote(db: Db, userId: number, id: string, input: UpdateNote
 
 	// Collaborators cannot trash notes
 	if (!isOwner && input.trashed !== undefined) {
+		return null;
+	}
+
+	// Only owner can change hidden state
+	if (!isOwner && (input.isHidden !== undefined || input.hiddenPassword !== undefined)) {
 		return null;
 	}
 
@@ -268,6 +286,19 @@ export function updateNote(db: Db, userId: number, id: string, input: UpdateNote
 			hasSharedUpdates = true;
 		}
 		if (input.sortOrder !== undefined) { sharedUpdates.sortOrder = input.sortOrder; hasSharedUpdates = true; }
+
+		if (input.isHidden !== undefined) {
+			sharedUpdates.isHidden = input.isHidden;
+			hasSharedUpdates = true;
+			// When hiding, require and hash the password
+			if (input.isHidden && input.hiddenPassword) {
+				sharedUpdates.hiddenPasswordHash = await argon2.hash(input.hiddenPassword);
+			}
+			// When unhiding, clear the password hash
+			if (!input.isHidden) {
+				sharedUpdates.hiddenPasswordHash = null;
+			}
+		}
 	}
 
 	const hasActualContentChange =
@@ -364,6 +395,7 @@ export function searchNotes(db: Db, userId: number, query: string) {
 			and(
 				eq(notes.userId, userId),
 				eq(notes.trashed, false),
+				eq(notes.isHidden, false),
 				or(like(notes.title, pattern), like(notes.content, pattern))
 			)
 		)
@@ -383,6 +415,7 @@ export function searchNotes(db: Db, userId: number, query: string) {
 			trashedAt: notes.trashedAt,
 			checklistMode: notes.checklistMode,
 			sortOrder: sql<number>`COALESCE(${noteUserState.sortOrder}, 0)`.as('user_sort_order'),
+			isHidden: notes.isHidden,
 			createdAt: notes.createdAt,
 			updatedAt: notes.updatedAt,
 			version: notes.version
@@ -397,6 +430,7 @@ export function searchNotes(db: Db, userId: number, query: string) {
 			and(
 				eq(noteCollaborators.userId, userId),
 				eq(notes.trashed, false),
+				eq(notes.isHidden, false),
 				or(like(notes.title, pattern), like(notes.content, pattern))
 			)
 		)
@@ -462,4 +496,33 @@ export function reorderNotes(db: Db, userId: number, orders: { id: string; sortO
 			}
 		}
 	}
+}
+
+/**
+ * Verify the password for a hidden note and return the full note if correct.
+ * Returns null if the note is not hidden, not found, or the password is wrong.
+ */
+export async function unlockNote(
+	db: Db,
+	userId: number,
+	noteId: string,
+	password: string
+) {
+	const { canAccess, isOwner } = canAccessNote(db, noteId, userId);
+	if (!canAccess) return null;
+
+	const note = db.select().from(notes).where(eq(notes.id, noteId)).get();
+	if (!note || !note.isHidden) return null;
+
+	// Only the owner can unlock their own hidden notes
+	if (!isOwner) return null;
+
+	if (!note.hiddenPasswordHash) return null;
+
+	const valid = await argon2.verify(note.hiddenPasswordHash, password);
+	if (!valid) return null;
+
+	// Return the full note (with content)
+	const result = hydrateNotes(db, [note as NoteRow], userId);
+	return result[0] ?? null;
 }

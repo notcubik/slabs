@@ -108,7 +108,7 @@ export function createMcpServer(userId: number): McpServer {
 			checklistMode: z.boolean().optional().describe('Enable/disable checklist mode')
 		},
 		async ({ id, ...updates }: { id: string; title?: string; content?: string; color?: string; pinned?: boolean; checklistMode?: boolean }) => {
-			const result = updateNote(db, userId, id, updates);
+			const result = await updateNote(db, userId, id, updates);
 			if (!result) {
 				return {
 					content: [{ type: 'text' as const, text: 'Note not found' }],
@@ -127,7 +127,7 @@ export function createMcpServer(userId: number): McpServer {
 		'Move a note to trash',
 		{ id: z.string().describe('Note ID') },
 		async ({ id }: { id: string }) => {
-			const result = updateNote(db, userId, id, { trashed: true });
+			const result = await updateNote(db, userId, id, { trashed: true });
 			if (!result) {
 				return {
 					content: [{ type: 'text' as const, text: 'Note not found' }],
@@ -145,7 +145,7 @@ export function createMcpServer(userId: number): McpServer {
 		'Restore a note from trash',
 		{ id: z.string().describe('Note ID') },
 		async ({ id }: { id: string }) => {
-			const result = updateNote(db, userId, id, { trashed: false });
+			const result = await updateNote(db, userId, id, { trashed: false });
 			if (!result) {
 				return {
 					content: [{ type: 'text' as const, text: 'Note not found' }],
@@ -163,7 +163,7 @@ export function createMcpServer(userId: number): McpServer {
 		'Archive a note',
 		{ id: z.string().describe('Note ID') },
 		async ({ id }: { id: string }) => {
-			const result = updateNote(db, userId, id, { archived: true });
+			const result = await updateNote(db, userId, id, { archived: true });
 			if (!result) {
 				return {
 					content: [{ type: 'text' as const, text: 'Note not found' }],
@@ -181,7 +181,7 @@ export function createMcpServer(userId: number): McpServer {
 		'Unarchive a note',
 		{ id: z.string().describe('Note ID') },
 		async ({ id }: { id: string }) => {
-			const result = updateNote(db, userId, id, { archived: false });
+			const result = await updateNote(db, userId, id, { archived: false });
 			if (!result) {
 				return {
 					content: [{ type: 'text' as const, text: 'Note not found' }],
@@ -246,7 +246,7 @@ export function createMcpServer(userId: number): McpServer {
 			pinned: z.boolean().describe('Whether to pin (true) or unpin (false)')
 		},
 		async ({ id, pinned }: { id: string; pinned: boolean }) => {
-			const result = updateNote(db, userId, id, { pinned });
+			const result = await updateNote(db, userId, id, { pinned });
 			if (!result) {
 				return {
 					content: [{ type: 'text' as const, text: 'Note not found' }],

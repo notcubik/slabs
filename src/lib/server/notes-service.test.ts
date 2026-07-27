@@ -190,25 +190,25 @@ describe('createNote', () => {
 });
 
 describe('updateNote', () => {
-	it('should allow owner to update shared fields directly', () => {
+	it('should allow owner to update shared fields directly', async () => {
 		seedNote('n1', { title: 'Original' });
-		const updated = updateNote(db, OWNER_ID, 'n1', { title: 'Updated' });
+		const updated = await updateNote(db, OWNER_ID, 'n1', { title: 'Updated' });
 		expect(updated).not.toBeNull();
 		expect(updated!.title).toBe('Updated');
 	});
 
-	it('should allow collaborator to edit content', () => {
+	it('should allow collaborator to edit content', async () => {
 		seedNote('n1', { title: 'Original', content: 'Old' });
 		shareNote('n1');
-		const updated = updateNote(db, COLLAB_ID, 'n1', { content: 'New content' });
+		const updated = await updateNote(db, COLLAB_ID, 'n1', { content: 'New content' });
 		expect(updated).not.toBeNull();
 		expect(updated!.content).toBe('New content');
 	});
 
-	it('should route collaborator per-user fields to noteUserState', () => {
+	it('should route collaborator per-user fields to noteUserState', async () => {
 		seedNote('n1', { title: 'Note', pinned: false });
 		shareNote('n1');
-		updateNote(db, COLLAB_ID, 'n1', { pinned: true, sortOrder: 7 });
+		await updateNote(db, COLLAB_ID, 'n1', { pinned: true, sortOrder: 7 });
 
 		// Owner's note pinned should be unchanged
 		const ownerView = getNote(db, OWNER_ID, 'n1');
@@ -220,51 +220,51 @@ describe('updateNote', () => {
 		expect(collabView!.sortOrder).toBe(7);
 	});
 
-	it('should return null when collaborator tries to trash', () => {
+	it('should return null when collaborator tries to trash', async () => {
 		seedNote('n1', { title: 'Note' });
 		shareNote('n1');
-		const result = updateNote(db, COLLAB_ID, 'n1', { trashed: true });
+		const result = await updateNote(db, COLLAB_ID, 'n1', { trashed: true });
 		expect(result).toBeNull();
 	});
 
-	it('should increment version on update', () => {
+	it('should increment version on update', async () => {
 		seedNote('n1', { title: 'V1' });
-		const updated = updateNote(db, OWNER_ID, 'n1', { title: 'V2' });
+		const updated = await updateNote(db, OWNER_ID, 'n1', { title: 'V2' });
 		expect(updated!.version).toBe(2);
 	});
 
-	it('should create a snapshot when content changes', () => {
+	it('should create a snapshot when content changes', async () => {
 		seedNote('n1', { title: 'Original', content: 'Hello', color: 'default', checklistMode: false });
-		updateNote(db, OWNER_ID, 'n1', { title: 'Changed' });
+		await updateNote(db, OWNER_ID, 'n1', { title: 'Changed' });
 
 		const snapshots = db.select().from(noteVersions).where(eq(noteVersions.noteId, 'n1')).all();
 		expect(snapshots).toHaveLength(1);
 	});
 
-	it('should not create a snapshot when no content field actually changed', () => {
+	it('should not create a snapshot when no content field actually changed', async () => {
 		seedNote('n1', { title: 'Same', content: 'Same', color: 'default', checklistMode: false });
 		// Send the same values — nothing actually changes
-		updateNote(db, OWNER_ID, 'n1', { title: 'Same', content: 'Same' });
+		await updateNote(db, OWNER_ID, 'n1', { title: 'Same', content: 'Same' });
 
 		const snapshots = db.select().from(noteVersions).where(eq(noteVersions.noteId, 'n1')).all();
 		expect(snapshots).toHaveLength(0);
 	});
 
-	it('should not create a snapshot when only non-content fields change (pinned, archived)', () => {
+	it('should not create a snapshot when only non-content fields change (pinned, archived)', async () => {
 		seedNote('n1', { title: 'Note', pinned: false });
-		updateNote(db, OWNER_ID, 'n1', { pinned: true });
+		await updateNote(db, OWNER_ID, 'n1', { pinned: true });
 
 		const snapshots = db.select().from(noteVersions).where(eq(noteVersions.noteId, 'n1')).all();
 		expect(snapshots).toHaveLength(0);
 	});
 
-	it('should extract and sync tags on title/content change', () => {
+	it('should extract and sync tags on title/content change', async () => {
 		seedNote('n1', { title: 'Original' });
-		const updated = updateNote(db, OWNER_ID, 'n1', { title: 'Now with #newtag' });
+		const updated = await updateNote(db, OWNER_ID, 'n1', { title: 'Now with #newtag' });
 		expect(updated!.tags).toContain('newtag');
 	});
 
-	it('should merge concurrent content edits using the snapshot created by the first update', () => {
+	it('should merge concurrent content edits using the snapshot created by the first update', async () => {
 		seedNote('n1', {
 			title: 'Shopping',
 			content: '- [ ] Milk\n- [ ] Bread',
@@ -273,13 +273,13 @@ describe('updateNote', () => {
 		});
 		shareNote('n1');
 
-		const ownerUpdate = updateNote(db, OWNER_ID, 'n1', {
+		const ownerUpdate = await updateNote(db, OWNER_ID, 'n1', {
 			content: '- [ ] Milk\n- [x] Bread',
 			baseVersion: 1
 		});
 		expect(ownerUpdate!.version).toBe(2);
 
-		const collabUpdate = updateNote(db, COLLAB_ID, 'n1', {
+		const collabUpdate = await updateNote(db, COLLAB_ID, 'n1', {
 			content: '- [x] Milk\n- [ ] Bread',
 			baseVersion: 1
 		});
@@ -289,17 +289,17 @@ describe('updateNote', () => {
 		expect(snapshots.some((snapshot) => snapshot.version === 1)).toBe(true);
 	});
 
-	it('should keep the incoming edit when a metadata-only bump left no base snapshot', () => {
+	it('should keep the incoming edit when a metadata-only bump left no base snapshot', async () => {
 		seedNote('n1', { title: 'Note', content: 'hello', version: 1 });
 
 		// A metadata-only change bumps the version but creates no snapshot.
-		updateNote(db, OWNER_ID, 'n1', { pinned: true });
+		await updateNote(db, OWNER_ID, 'n1', { pinned: true });
 		const snapshots = db.select().from(noteVersions).where(eq(noteVersions.noteId, 'n1')).all();
 		expect(snapshots).toHaveLength(0);
 
 		// A later concurrent content edit based on the pre-bump version therefore has
 		// no base to merge against — the incoming edit must be preserved, not dropped.
-		const edited = updateNote(db, OWNER_ID, 'n1', { content: 'hello world', baseVersion: 1 });
+		const edited = await updateNote(db, OWNER_ID, 'n1', { content: 'hello world', baseVersion: 1 });
 
 		expect(edited!.content).toBe('hello world');
 	});

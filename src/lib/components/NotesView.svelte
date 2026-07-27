@@ -1,8 +1,9 @@
 <script lang="ts">
 	import NoteGrid from '$lib/components/NoteGrid.svelte';
 	import NoteEditor from '$lib/components/NoteEditor.svelte';
+	import PasswordModal from '$lib/components/PasswordModal.svelte';
 	import TagFilter from '$lib/components/TagFilter.svelte';
-	import { pinnedNotes, unpinnedNotes, selectedTag, currentFilter, notes, notesLoaded, loadNotes, updateSortOrders } from '$lib/stores/notes.js';
+	import { pinnedNotes, unpinnedNotes, selectedTag, currentFilter, notes, notesLoaded, loadNotes, updateSortOrders, unlockNote } from '$lib/stores/notes.js';
 	import { onMount } from 'svelte';
 	import { replaceState } from '$app/navigation';
 	import type { Note, NoteFilter } from '$lib/types/index.js';
@@ -20,6 +21,7 @@
 	let editingNote: Note | null = $state(null);
 	let showNewNote = $state(false);
 	let newNoteChecklist = $state(false);
+	let unlockingNote: Note | null = $state(null);
 
 	$effect(() => {
 		currentFilter.set(filter);
@@ -42,6 +44,25 @@
 	function handleReorder(noteIds: string[]) {
 		const orders = noteIds.map((id, index) => ({ id, sortOrder: index }));
 		updateSortOrders(orders);
+	}
+
+	function handleUnlockRequest(note: Note) {
+		unlockingNote = note;
+	}
+
+	function handleUnlockClose() {
+		unlockingNote = null;
+	}
+
+	async function handleUnlockSubmit(password: string) {
+		if (!unlockingNote) return;
+		const unlocked = await unlockNote(unlockingNote.id, password);
+		if (unlocked) {
+			unlockingNote = null;
+			openEditor(unlocked);
+		} else {
+			throw new Error('Invalid password');
+		}
 	}
 
 	onMount(() => {
@@ -109,7 +130,7 @@
 		<div class="mb-2 flex items-center gap-2 px-1">
 			<p class="text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">Pinned</p>
 		</div>
-		<NoteGrid notes={$pinnedNotes} onEdit={openEditor} draggable dndType="pinned-notes" onReorder={handleReorder} />
+		<NoteGrid notes={$pinnedNotes} onEdit={openEditor} onUnlock={handleUnlockRequest} draggable dndType="pinned-notes" onReorder={handleReorder} />
 	</div>
 {/if}
 
@@ -117,6 +138,7 @@
 	notes={$unpinnedNotes}
 	label={$pinnedNotes.length > 0 ? 'Others' : ''}
 	onEdit={openEditor}
+	onUnlock={handleUnlockRequest}
 	draggable
 	dndType="unpinned-notes"
 	onReorder={handleReorder}
@@ -148,4 +170,11 @@
 
 {#if editingNote}
 	<NoteEditor note={editingNote} onClose={closeEditor} />
+{/if}
+
+{#if unlockingNote}
+	<PasswordModal
+		onSubmit={handleUnlockSubmit}
+		onClose={handleUnlockClose}
+	/>
 {/if}

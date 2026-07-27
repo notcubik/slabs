@@ -12,6 +12,7 @@
 	import Archive from 'lucide-svelte/icons/archive';
 	import ArchiveRestore from 'lucide-svelte/icons/archive-restore';
 	import UserMinus from 'lucide-svelte/icons/user-minus';
+	import Lock from 'lucide-svelte/icons/lock';
 	import { tooltip } from '$lib/utils/tooltip.js';
 	import { linkifyText } from '$lib/utils/checklist.js';
 
@@ -24,10 +25,11 @@
 	interface Props {
 		note: Note;
 		onEdit: (note: Note) => void;
+		onUnlock?: (note: Note) => void;
 		fullHeight?: boolean;
 	}
 
-	let { note, onEdit, fullHeight = false }: Props = $props();
+	let { note, onEdit, onUnlock, fullHeight = false }: Props = $props();
 
 	$effect(() => {
 		cardStyle = `background-color: ${getNoteColor(note.color, getIsDarkMode())}`;
@@ -66,6 +68,22 @@
 	const isCompact = $derived(contentLength < 120);
 	const isMedium = $derived(contentLength >= 120 && contentLength < 400);
 
+	const isHidden = $derived(note.isHidden ?? false);
+
+	function handleClick() {
+		if (isHidden && onUnlock) {
+			onUnlock(note);
+		} else {
+			onEdit(note);
+		}
+	}
+
+	function handleKeydown(e: KeyboardEvent) {
+		if (e.key === 'Enter') {
+			handleClick();
+		}
+	}
+
 	function stop(fn: () => void) {
 		return (e: Event) => {
 			e.stopPropagation();
@@ -78,8 +96,8 @@
 <article
 	class="group relative cursor-pointer rounded-xl border border-[var(--border-subtle)] p-4 text-[var(--text)] outline-none transition-all duration-150 hover:border-[var(--primary)]/40 shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] overflow-hidden flex flex-col {fullHeight ? 'h-full' : ''} {isCompact ? 'min-h-[6rem]' : isMedium ? 'min-h-[10rem]' : 'min-h-[14rem]'}"
 	style={cardStyle}
-	onclick={() => onEdit(note)}
-	onkeydown={(e) => e.key === 'Enter' && onEdit(note)}
+	onclick={handleClick}
+	onkeydown={handleKeydown}
 	role="button"
 	tabindex="0"
 	data-testid="note-card"
@@ -115,6 +133,11 @@
 
 	<!-- Status indicators (top-right) -->
 	<div class="absolute top-2 right-2 flex items-center gap-0.5">
+		{#if isHidden}
+			<span class="rounded-lg p-1 text-[var(--text-muted)]" use:tooltip={"Hidden"}>
+				<Lock class="h-3.5 w-3.5" />
+			</span>
+		{/if}
 		{#if note.shareToken || (note.isShared && note.collaborators)}
 			<SharingIndicator
 				shareToken={note.shareToken}
@@ -134,11 +157,18 @@
 		{/if}
 	</div>
 
-	{#if note.title}
-		<h3 class="mb-1.5 text-sm font-semibold text-[var(--text)] leading-snug">{note.title}</h3>
-	{/if}
+	{#if isHidden}
+		<!-- Hidden note placeholder -->
+		<div class="flex flex-1 flex-col items-center justify-center gap-2 text-center">
+			<Lock class="h-6 w-6 text-[var(--text-muted)]/50" />
+			<p class="text-xs text-[var(--text-muted)]/70">Click to unlock</p>
+		</div>
+	{:else}
+		{#if note.title}
+			<h3 class="mb-1.5 text-sm font-semibold text-[var(--text)] leading-snug">{note.title}</h3>
+		{/if}
 
-	{#if note.checklistMode && checklistItems.length > 0}
+		{#if note.checklistMode && checklistItems.length > 0}
 		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 		<ul class="space-y-1.5 mb-4" data-testid="note-checklist-preview"
 			onclick={(e) => { if ((e.target as HTMLElement).closest('a')) e.stopPropagation(); }}
@@ -164,6 +194,7 @@
 		<div class="prose prose-sm line-clamp-6 max-w-none text-sm text-[var(--text-muted)] leading-relaxed" data-testid="note-content-preview">
 			{@html renderedContent}
 		</div>
+	{/if}
 	{/if}
 
 	{#if note.tags && note.tags.length > 0}
