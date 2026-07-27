@@ -4,7 +4,7 @@
 	import { getPreferences, updatePreference } from '$lib/stores/preferences.svelte.js';
 	import type { NoteColor } from '$lib/types/index.js';
 
-	const prefs = $derived(getPreferences());
+	const prefs = getPreferences();
 </script>
 
 <div class="space-y-8">

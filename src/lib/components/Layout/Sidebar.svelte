@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { allTags, selectedTag, currentFilter } from '$lib/stores/notes.js';
 	import { StickyNote, Archive, Trash2, Tag, Settings, Pin } from 'lucide-svelte';
 
@@ -51,7 +51,7 @@
 					<a
 						href={item.href}
 						onclick={closeMobile}
-						class="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors {item.match($page.url.pathname) ? 'bg-[var(--primary-muted)] text-[var(--primary)]' : 'text-[var(--text-muted)] hover:bg-[var(--bg-surface-alt)] hover:text-[var(--text)]'}"
+						class="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors {item.match(page.url.pathname) ? 'bg-[var(--primary-muted)] text-[var(--primary)]' : 'text-[var(--text-muted)] hover:bg-[var(--bg-surface-alt)] hover:text-[var(--text)]'}"
 					>
 						<item.icon size={16} />
 						{item.label}
@@ -94,7 +94,7 @@
 		<div class="border-t border-[var(--border)] pt-2">
 			<a
 				href="/settings"
-				class="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors {$page.url.pathname.startsWith('/settings') ? 'bg-[var(--primary-muted)] text-[var(--primary)]' : 'text-[var(--text-muted)] hover:bg-[var(--bg-surface-alt)] hover:text-[var(--text)]'}"
+				class="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors {page.url.pathname.startsWith('/settings') ? 'bg-[var(--primary-muted)] text-[var(--primary)]' : 'text-[var(--text-muted)] hover:bg-[var(--bg-surface-alt)] hover:text-[var(--text)]'}"
 				onclick={closeMobile}
 				data-testid="settings-link"
 			>

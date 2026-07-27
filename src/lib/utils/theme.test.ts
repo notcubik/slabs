@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import type { AccentColor } from '$lib/types/preferences.js';
 
 // Mock $app/environment
 vi.mock('$app/environment', () => ({ browser: true }));
@@ -70,7 +71,7 @@ describe('applyTheme', () => {
 });
 
 describe('applyAccentColor', () => {
-	let applyAccentColor: (accentColor: string) => void;
+	let applyAccentColor: (accentColor: AccentColor) => void;
 
 	beforeEach(async () => {
 		document.documentElement.removeAttribute('data-color');

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
-	let appVersion = $derived($page.data.appVersion);
+	let appVersion = $derived(page.data.appVersion);
 </script>
 
 <div class="space-y-8">

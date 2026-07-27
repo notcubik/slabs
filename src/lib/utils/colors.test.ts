@@ -3,18 +3,18 @@ import { getNoteColor, NOTE_COLORS, NOTE_COLORS_DARK } from '$lib/utils/colors.j
 
 describe('getNoteColor', () => {
 	it('returns light color when isDark is false', () => {
-		expect(getNoteColor('default', false)).toBe('#faf5eb');
-		expect(getNoteColor('coral', false)).toBe('#faafa8');
+		expect(getNoteColor('default', false)).toBe('#FFFFFF');
+		expect(getNoteColor('coral', false)).toBe('#FFF1F2');
 	});
 
 	it('returns dark color when isDark is true', () => {
-		expect(getNoteColor('default', true)).toBe('#2a2520');
-		expect(getNoteColor('coral', true)).toBe('#4a2522');
+		expect(getNoteColor('default', true)).toBe('#18181B');
+		expect(getNoteColor('coral', true)).toBe('#2D1518');
 	});
 
 	it('returns default color for unknown color name', () => {
-		expect(getNoteColor('unknown' as any, false)).toBe('#faf5eb');
-		expect(getNoteColor('unknown' as any, true)).toBe('#2a2520');
+		expect(getNoteColor('unknown' as any, false)).toBe('#FFFFFF');
+		expect(getNoteColor('unknown' as any, true)).toBe('#18181B');
 	});
 
 	it('has matching keys in light and dark color maps', () => {

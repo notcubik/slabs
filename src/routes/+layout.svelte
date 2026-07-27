@@ -10,7 +10,7 @@
 	let mediaQuery: MediaQueryList | undefined;
 	let systemListener: ((e: MediaQueryListEvent) => void) | undefined;
 
-	const prefs = $derived(getPreferences());
+	const prefs = getPreferences();
 
 	onMount(async () => {
 		if (pwaInfo) {

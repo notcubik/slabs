@@ -10,7 +10,7 @@
 
 	let { data, children } = $props();
 	let sidebarOpen = $state(false);
-	const prefs = $derived(getPreferences());
+	const prefs = getPreferences();
 
 	onMount(() => {
 		initPreferences();
