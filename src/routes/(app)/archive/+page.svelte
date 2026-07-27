@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-	<title>Archive - Slabs</title>
+	<title>Archive - slabs</title>
 </svelte:head>
 
 <NotesView filter="archived" />

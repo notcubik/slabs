@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { updatePreference, getPreferences } from '$lib/stores/preferences.svelte.js';
 
-	const prefs = getPreferences();
+	const prefs = $derived(getPreferences());
 
 	const accents = [
 		{ id: 'slates' as const, label: 'Slate', color: '#6366F1' },

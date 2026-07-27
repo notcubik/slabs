@@ -6,7 +6,7 @@
 
 <div class="space-y-8">
 	<div class="flex items-center gap-3">
-		<h2 class="font-display text-xl font-bold text-[var(--text)]">About Slabs</h2>
+		<h2 class="font-display text-xl font-bold text-[var(--text)]">About slabs</h2>
 		<span
 			class="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface-alt)] px-2 py-0.5 text-xs font-medium text-[var(--text-muted)]"
 		>
@@ -17,7 +17,7 @@
 	<section
 		class="space-y-2 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 shadow-[var(--card-shadow)]"
 	>
-		<h3 class="font-display text-sm font-bold text-[var(--text)]">What is Slabs?</h3>
+		<h3 class="font-display text-sm font-bold text-[var(--text)]">What is slabs?</h3>
 		<p class="text-sm leading-relaxed text-[var(--text-muted)]">
 			A self-hostable, offline-first note-taking app. Your notes, your server, your rules.
 			Built with care for speed, privacy, and simplicity.
@@ -29,7 +29,7 @@
 	>
 		<h3 class="font-display text-sm font-bold text-[var(--text)]">Open Source</h3>
 		<p class="text-sm leading-relaxed text-[var(--text-muted)]">
-			Slabs is licensed under the MIT License. Source code is available on
+			slabs is licensed under the MIT License. Source code is available on
 			<a
 				href="https://github.com/notcubik/slabs"
 				target="_blank"
@@ -68,7 +68,7 @@
 	>
 		<h3 class="font-display text-sm font-bold text-[var(--text)]">Credits</h3>
 		<p class="text-sm leading-relaxed text-[var(--text-muted)]">
-			Slabs is a fork of
+			slabs is a fork of
 			<a
 				href="https://github.com/bretzel-app/crumbs"
 				target="_blank"

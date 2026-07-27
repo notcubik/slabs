@@ -28,7 +28,7 @@
 
 		<div class="flex items-center gap-2.5">
 			<img src="/favicon.svg" alt="" class="h-7 w-7" />
-			<h1 class="font-display text-lg font-semibold tracking-tight text-[var(--text)]">Slabs</h1>
+			<h1 class="font-display text-lg font-semibold tracking-tight text-[var(--text)]">slabs</h1>
 		</div>
 
 		<div class="mx-4 hidden flex-1 lg:block">

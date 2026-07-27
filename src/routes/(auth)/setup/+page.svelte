@@ -51,13 +51,13 @@
 </script>
 
 <svelte:head>
-	<title>Setup - Slabs</title>
+	<title>Setup - slabs</title>
 </svelte:head>
 
 <div class="w-full max-w-sm rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] p-8 shadow-[var(--card-shadow)]">
 	<div class="mb-6 text-center">
-		<img src="/favicon.svg" alt="Slabs" class="mx-auto h-12 w-12" />
-		<h1 class="font-['Press_Start_2P'] text-xl text-[var(--primary)]">Welcome to Slabs</h1>
+		<img src="/favicon.svg" alt="slabs" class="mx-auto h-12 w-12" />
+		<h1 class="font-display text-xl font-bold text-[var(--text)]">Welcome to slabs</h1>
 		<p class="mt-2 text-sm text-[var(--text-muted)]">Create your admin account to get started</p>
 	</div>
 

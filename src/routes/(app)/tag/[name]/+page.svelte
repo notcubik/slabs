@@ -4,7 +4,7 @@
 </script>
 
 <svelte:head>
-	<title>#{page.params.name} - Slabs</title>
+	<title>#{page.params.name} - slabs</title>
 </svelte:head>
 
 <NotesView filter="all" tag={page.params.name} />

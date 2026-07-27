@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-	<title>Trash - Slabs</title>
+	<title>Trash - slabs</title>
 </svelte:head>
 
 <NotesView filter="trashed" />

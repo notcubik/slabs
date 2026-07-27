@@ -14,6 +14,4 @@
   <!-- Connecting fold lines -->
   <path d="M432 136 C 460 136, 460 184, 432 184" fill="none" stroke="#8B5CF6" stroke-width="4" opacity="0.6"/>
   <path d="M432 256 C 460 256, 460 304, 432 304" fill="none" stroke="#8B5CF6" stroke-width="4" opacity="0.4"/>
-  <!-- Accent dot -->
-  <circle cx="256" cy="456" r="18" fill="url(#grad)"/>
 </svg>

@@ -249,6 +249,16 @@ try {
 } catch {
 	// Column already exists
 }
+try {
+	sqlite.exec(`ALTER TABLE notes ADD COLUMN is_hidden INTEGER NOT NULL DEFAULT 0;`);
+} catch {
+	// Column already exists
+}
+try {
+	sqlite.exec(`ALTER TABLE notes ADD COLUMN hidden_password_hash TEXT;`);
+} catch {
+	// Column already exists
+}
 
 // Migration: make password_hash nullable (for OAuth-only users)
 const pwCol = (

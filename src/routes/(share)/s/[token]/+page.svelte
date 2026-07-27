@@ -49,7 +49,7 @@
 </script>
 
 <svelte:head>
-	<title>{data.title || 'Shared Note'} — Slabs</title>
+	<title>{data.title || 'Shared Note'} — slabs</title>
 	<meta name="description" content={data.content.slice(0, 160)} />
 </svelte:head>
 
@@ -124,7 +124,7 @@
 			rel="noopener noreferrer"
 			class="font-display text-[10px] tracking-wider text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors"
 		>
-			POWERED BY SLABS
+			POWERED BY slabs
 		</a>
 	</div>
 </div>

@@ -10,8 +10,6 @@
 	let mediaQuery: MediaQueryList | undefined;
 	let systemListener: ((e: MediaQueryListEvent) => void) | undefined;
 
-	const prefs = getPreferences();
-
 	onMount(async () => {
 		if (pwaInfo) {
 			const { registerSW } = await import('virtual:pwa-register');
@@ -29,7 +27,7 @@
 
 	$effect(() => {
 		if (!browser) return;
-		const theme = prefs.theme ?? 'system';
+		const theme = getPreferences().theme ?? 'system';
 		applyTheme(theme);
 
 		// Listen for system preference changes when in system mode
@@ -45,7 +43,7 @@
 
 	$effect(() => {
 		if (!browser) return;
-		applyAccentColor(prefs.accentColor ?? 'slates');
+		applyAccentColor(getPreferences().accentColor ?? 'slates');
 	});
 
 	onDestroy(() => {

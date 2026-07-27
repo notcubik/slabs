@@ -10,7 +10,7 @@
 
 	let { data, children } = $props();
 	let sidebarOpen = $state(false);
-	const prefs = getPreferences();
+	const hideFooter = $derived(getPreferences().hideFooter);
 
 	onMount(() => {
 		initPreferences();
@@ -43,9 +43,9 @@
 		</div>
 	</main>
 
-	{#if !prefs.hideFooter}
+	{#if !hideFooter}
 		<footer class="pb-4 pt-8 text-center text-xs text-[var(--text-muted)] opacity-60 {sidebarOpen ? 'lg:ml-60' : ''}" data-testid="app-footer">
-			Slabs &mdash; your notes, your server
+			slabs &mdash; your notes, your server
 		</footer>
 	{/if}
 

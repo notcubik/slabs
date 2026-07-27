@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-	<title>Slabs</title>
+	<title>slabs</title>
 </svelte:head>
 
 <NotesView filter="all" />

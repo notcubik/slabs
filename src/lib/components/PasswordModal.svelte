@@ -36,8 +36,8 @@
 		error = '';
 		try {
 			await onSubmit(password);
-		} catch {
-			error = 'Incorrect password';
+		} catch (e) {
+			error = e instanceof Error ? e.message : 'Incorrect password';
 		} finally {
 			loading = false;
 		}

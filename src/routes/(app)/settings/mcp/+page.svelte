@@ -35,7 +35,7 @@
   }
 }`);
 
-	let llmInstallPrompt = $derived(`Install the Slabs MCP server with the following configuration:
+	let llmInstallPrompt = $derived(`Install the slabs MCP server with the following configuration:
 
 - Type: HTTP (Streamable HTTP)
 - URL: ${baseUrl}/api/mcp

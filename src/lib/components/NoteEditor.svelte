@@ -189,7 +189,7 @@
 	$effect(() => {
 		const indicator = saveStatus === 'unsaved' ? ' \u002A' : '';
 		const name = title || 'Untitled';
-		document.title = `${name}${indicator} - Slabs`;
+		document.title = `${name}${indicator} - slabs`;
 	});
 
 	// svelte-ignore state_referenced_locally

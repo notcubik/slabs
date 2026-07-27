@@ -40,7 +40,7 @@
 	});
 </script>
 
-<svelte:head><title>Manage Tags - Slabs</title></svelte:head>
+<svelte:head><title>Manage Tags - slabs</title></svelte:head>
 
 <div class="max-w-2xl">
 	<h1 class="mb-6 text-2xl font-bold text-[var(--text)]">Manage Tags</h1>
