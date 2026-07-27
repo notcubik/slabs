@@ -37,15 +37,15 @@
 	<Header onMenuToggle={() => (sidebarOpen = !sidebarOpen)} />
 	<Sidebar open={sidebarOpen} onClose={() => (sidebarOpen = false)} />
 
-	<main id="main-content" class="flex-1 pt-4 transition-all {sidebarOpen ? 'lg:ml-64' : ''}">
+	<main id="main-content" class="flex-1 pt-4 transition-all duration-200 {sidebarOpen ? 'lg:ml-60' : ''}">
 		<div class="mx-auto max-w-7xl px-4">
 			{@render children()}
 		</div>
 	</main>
 
 	{#if !prefs.hideFooter}
-		<footer class="pb-4 pt-8 text-center text-xs text-[var(--text-muted)] {sidebarOpen ? 'lg:ml-64' : ''}" data-testid="app-footer">
-			Slabs by <a href="https://bretzel.app" target="_blank" rel="noopener noreferrer" class="hover:text-[var(--primary)] transition-colors">Bretzel</a> &mdash; made with 🥨 in Strasbourg
+		<footer class="pb-4 pt-8 text-center text-xs text-[var(--text-muted)]/60 {sidebarOpen ? 'lg:ml-60' : ''}" data-testid="app-footer">
+			Slabs &mdash; your notes, your server
 		</footer>
 	{/if}
 

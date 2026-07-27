@@ -1,11 +1,11 @@
 openapi: 3.1.0
 info:
   title: Slabs API
-  description: REST API for Slabs by Bretzel — a self-hostable, offline-first notes app.
+  description: REST API for Slabs — a self-hostable, offline-first notes app.
   version: 0.1.0
   contact:
-    name: Bretzel
-    url: https://bretzel.app
+    name: Slabs
+    url: https://github.com/notcubik/slabs
 
 servers:
   - url: http://localhost:3000

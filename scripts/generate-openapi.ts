@@ -124,8 +124,8 @@ const spec = {
 		description: `Auto-generated API spec for ${pkg.name}`,
 		version: pkg.version,
 		contact: {
-			name: 'Bretzel',
-			url: 'https://bretzel.app'
+			name: 'Slabs',
+			url: 'https://github.com/notcubik/slabs'
 		}
 	},
 	servers: [{ url: '/', description: 'Current instance' }],

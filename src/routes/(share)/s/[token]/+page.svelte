@@ -119,10 +119,10 @@
 
 	<div class="mt-6 text-center">
 		<a
-			href="https://slabs.bretzel.app"
+			href="https://github.com/notcubik/slabs"
 			target="_blank"
 			rel="noopener noreferrer"
-			class="font-['Press_Start_2P'] text-[8px] tracking-wider text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors"
+			class="font-display text-[10px] tracking-wider text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors"
 		>
 			POWERED BY SLABS
 		</a>

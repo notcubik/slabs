@@ -22,7 +22,7 @@
 		placeholder?: string;
 	}
 
-	let { content, onUpdate, onEditor, onTransaction, placeholder = 'Add a crumb...' }: Props = $props();
+	let { content, onUpdate, onEditor, onTransaction, placeholder = 'Start writing...' }: Props = $props();
 
 	let element: HTMLDivElement | undefined = $state();
 	let editor: Editor | undefined = $state();

@@ -24,7 +24,7 @@ This code of conduct applies to all project spaces — issues, pull requests, di
 
 ## Enforcement
 
-Instances of unacceptable behavior may be reported to the maintainers at **security@bretzel.app**. All reports will be reviewed and handled confidentially. Maintainers reserve the right to remove, edit, or reject contributions that violate this code of conduct, and to temporarily or permanently ban contributors for repeated or severe violations.
+Instances of unacceptable behavior may be reported to the maintainers at **security@slabs.app**. All reports will be reviewed and handled confidentially. Maintainers reserve the right to remove, edit, or reject contributions that violate this code of conduct, and to temporarily or permanently ban contributors for repeated or severe violations.
 
 ## Attribution
 

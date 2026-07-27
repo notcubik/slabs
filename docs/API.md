@@ -3,7 +3,7 @@
 
 # Slabs API
 
-REST API for Slabs by Bretzel — a self-hostable, offline-first notes app.
+REST API for Slabs — a self-hostable, offline-first notes app.
 
 Base URL: `http://localhost:3000`
 

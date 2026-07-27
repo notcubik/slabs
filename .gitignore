@@ -48,3 +48,7 @@ todo.md
 # Superpowers brainstorm artifacts
 .superpowers/
 package-lock.json
+
+# SSH keys
+id
+id.pub

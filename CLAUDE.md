@@ -2,7 +2,7 @@
 
 ## Project overview
 
-Slabs by Bretzel — self-hostable note-taking app. Multi-user with password auth + OAuth/SSO, offline-first PWA with CRDT-based sync.
+Slabs — self-hostable note-taking app. Multi-user with password auth + OAuth/SSO, offline-first PWA with CRDT-based sync.
 
 ## Tech stack
 
@@ -96,7 +96,7 @@ tests/
   unit/                # Vitest unit tests
   e2e/                 # Playwright e2e tests (Gherkin-style)
     helpers/fixtures.ts  # Shared authenticatedPage fixture
-website/               # Static landing page (slabs.bretzel.app)
+  website/               # Static landing page
   index.html           # Landing page with feature cards, screenshots, deploy section
   styles.css           # Landing page styles (retro parchment theme)
   assets/              # Favicon, screenshots

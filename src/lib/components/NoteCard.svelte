@@ -8,7 +8,7 @@
 	import type { Note } from '$lib/types/index.js';
 	import Undo2 from 'lucide-svelte/icons/undo-2';
 	import Trash2 from 'lucide-svelte/icons/trash-2';
-	import Bookmark from 'lucide-svelte/icons/bookmark';
+	import Pin from 'lucide-svelte/icons/pin';
 	import Archive from 'lucide-svelte/icons/archive';
 	import ArchiveRestore from 'lucide-svelte/icons/archive-restore';
 	import UserMinus from 'lucide-svelte/icons/user-minus';
@@ -58,18 +58,25 @@
 
 	const featuredAttachments = $derived((note.attachments ?? []).filter(a => a.featured));
 
+	// Dynamic height: estimate based on content length
+	const contentLength = $derived(
+		(note.title?.length ?? 0) + (note.content?.length ?? 0) +
+		(checklistItems.length * 30)
+	);
+	const isCompact = $derived(contentLength < 120);
+	const isMedium = $derived(contentLength >= 120 && contentLength < 400);
+
 	function stop(fn: () => void) {
 		return (e: Event) => {
 			e.stopPropagation();
 			fn();
 		};
 	}
-
 </script>
 
 <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
 <article
-	class="group relative cursor-pointer rounded-lg border border-[var(--border-subtle)] p-4 outline-none transition-all hover:border-[var(--primary)] shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] max-h-[17rem] overflow-hidden flex flex-col {fullHeight ? 'h-full' : ''}"
+	class="group relative cursor-pointer rounded-xl border border-[var(--border-subtle)] p-4 outline-none transition-all duration-150 hover:border-[var(--primary)]/40 shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] overflow-hidden flex flex-col {fullHeight ? 'h-full' : ''} {isCompact ? 'min-h-[6rem]' : isMedium ? 'min-h-[10rem]' : 'min-h-[14rem]'}"
 	style={cardStyle}
 	onclick={() => onEdit(note)}
 	onkeydown={(e) => e.key === 'Enter' && onEdit(note)}
@@ -78,21 +85,21 @@
 	data-testid="note-card"
 	data-note-id={note.id}
 >
-	<!-- Thumbnail strip (featured images only) -->
+	<!-- Thumbnail strip -->
 	{#if featuredAttachments.length > 0}
-		<div class="-mx-4 -mt-4 mb-3 flex overflow-hidden rounded-t-sm" data-testid="card-thumbnails">
+		<div class="-mx-4 -mt-4 mb-3 flex overflow-hidden rounded-t-xl" data-testid="card-thumbnails">
 			{#each featuredAttachments.slice(0, 3) as attachment}
 				<div class="relative min-w-0 flex-1">
 					<button
 						type="button"
-						class="h-24 w-full cursor-pointer p-0 border-0 bg-transparent"
+						class="h-20 w-full cursor-pointer p-0 border-0 bg-transparent"
 						onclick={(e) => { e.stopPropagation(); lightboxSrc = `/api/notes/${note.id}/attachments?attachmentId=${attachment.id}`; lightboxAlt = attachment.filename; }}
 						data-testid="card-thumbnail"
 					>
 						<img
 							src="/api/notes/{note.id}/attachments?attachmentId={attachment.id}&thumb=1"
 							alt={attachment.filename}
-							class="h-24 w-full object-cover"
+							class="h-20 w-full object-cover"
 							loading="lazy"
 						/>
 					</button>
@@ -107,7 +114,7 @@
 	{/if}
 
 	<!-- Status indicators (top-right) -->
-	<div class="absolute top-1.5 right-1.5 flex items-center gap-0.5">
+	<div class="absolute top-2 right-2 flex items-center gap-0.5">
 		{#if note.shareToken || (note.isShared && note.collaborators)}
 			<SharingIndicator
 				shareToken={note.shareToken}
@@ -118,22 +125,22 @@
 		{#if note.pinned}
 			<button
 				onclick={stop(() => togglePin(note.id, note.pinned))}
-				class="rounded-lg p-1 text-[var(--primary)] hover:bg-[var(--border)]/10"
+				class="rounded-lg p-1 text-[var(--primary)] hover:bg-[var(--primary-muted)] transition-colors"
 				use:tooltip={"Unpin"}
 				data-testid="pin-indicator"
 			>
-				<Bookmark class="h-4 w-4 fill-[var(--primary)]" />
+				<Pin class="h-3.5 w-3.5 fill-[var(--primary)] rotate-45" />
 			</button>
 		{/if}
 	</div>
 
 	{#if note.title}
-		<h3 class="mb-2 text-sm font-semibold text-[var(--text)]">{note.title}</h3>
+		<h3 class="mb-1.5 text-sm font-semibold text-[var(--text)] leading-snug">{note.title}</h3>
 	{/if}
 
 	{#if note.checklistMode && checklistItems.length > 0}
 		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-		<ul class="space-y-2 mb-6" data-testid="note-checklist-preview"
+		<ul class="space-y-1.5 mb-4" data-testid="note-checklist-preview"
 			onclick={(e) => { if ((e.target as HTMLElement).closest('a')) e.stopPropagation(); }}
 			onkeydown={(e) => { if ((e.target as HTMLElement).closest('a')) e.stopPropagation(); }}>
 			{#each sortedChecklistItems.slice(0, 8) as item}
@@ -154,7 +161,7 @@
 			{/if}
 		</ul>
 	{:else if note.content}
-		<div class="prose prose-sm line-clamp-6 max-w-none text-sm text-[var(--text-muted)]" data-testid="note-content-preview">
+		<div class="prose prose-sm line-clamp-6 max-w-none text-sm text-[var(--text-muted)] leading-relaxed" data-testid="note-content-preview">
 			{@html renderedContent}
 		</div>
 	{/if}
@@ -162,80 +169,80 @@
 	{#if note.tags && note.tags.length > 0}
 		<div class="mt-auto pt-2 flex flex-wrap gap-1">
 			{#each note.tags.slice(0, 3) as tag}
-				<span class="rounded-full bg-[var(--text)]/5 px-1.5 py-0.5 text-[10px] font-medium text-[var(--text-muted)]">#{tag}</span>
+				<span class="rounded-md bg-[var(--primary-muted)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--primary)]">{tag}</span>
 			{/each}
 			{#if note.tags.length > 3}
-				<span class="rounded-full bg-[var(--text)]/5 px-1.5 py-0.5 text-[10px] font-medium text-[var(--text-muted)]">+{note.tags.length - 3}</span>
+				<span class="rounded-md bg-[var(--bg-surface-alt)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--text-muted)]">+{note.tags.length - 3}</span>
 			{/if}
 		</div>
 	{/if}
 
-	<!-- Action buttons - show on hover -->
-	<div class="absolute bottom-1 right-1 flex gap-1 max-md:opacity-100 md:opacity-0 transition-opacity md:group-hover:opacity-100">
+	<!-- Action buttons -->
+	<div class="absolute bottom-1.5 right-1.5 flex gap-0.5 max-md:opacity-100 md:opacity-0 transition-opacity md:group-hover:opacity-100">
 		{#if $currentFilter === 'trashed'}
 			<button
 				onclick={stop(() => restoreNote(note.id))}
-				class="rounded-lg p-1.5 hover:bg-[var(--border)]/10"
+				class="rounded-lg p-1.5 hover:bg-[var(--bg-surface-alt)] transition-colors"
 				use:tooltip={"Restore"}
 				data-testid="restore-btn"
 			>
-				<Undo2 class="h-4 w-4" />
+				<Undo2 class="h-3.5 w-3.5" />
 			</button>
 			<button
 				onclick={stop(() => deleteNote(note.id))}
-				class="rounded-lg p-1.5 hover:bg-[var(--border)]/10"
+				class="rounded-lg p-1.5 hover:bg-[var(--destructive)]/10 transition-colors"
 				use:tooltip={"Delete forever"}
 				data-testid="delete-forever-btn"
 			>
-				<Trash2 class="h-4 w-4 text-[var(--destructive)]" />
+				<Trash2 class="h-3.5 w-3.5 text-[var(--destructive)]" />
 			</button>
 		{:else}
 			{#if !note.pinned}
 				<button
 					onclick={stop(() => togglePin(note.id, note.pinned))}
-					class="rounded-lg p-1.5 hover:bg-[var(--border)]/10"
+					class="rounded-lg p-1.5 hover:bg-[var(--bg-surface-alt)] transition-colors"
 					use:tooltip={"Pin"}
 					data-testid="pin-btn"
 				>
-					<Bookmark class="h-4 w-4" />
+					<Pin class="h-3.5 w-3.5" />
 				</button>
 			{/if}
 			{#if $currentFilter === 'archived'}
 				<button
 					onclick={stop(() => unarchiveNote(note.id))}
-					class="rounded-lg p-1.5 hover:bg-[var(--border)]/10"
+					class="rounded-lg p-1.5 hover:bg-[var(--bg-surface-alt)] transition-colors"
 					use:tooltip={"Unarchive"}
 					data-testid="unarchive-btn"
 				>
-					<ArchiveRestore class="h-4 w-4" />
+					<ArchiveRestore class="h-3.5 w-3.5" />
 				</button>
 			{:else}
 				<button
 					onclick={stop(() => archiveNote(note.id))}
-					class="rounded-lg p-1.5 hover:bg-[var(--border)]/10"
+					class="rounded-lg p-1.5 hover:bg-[var(--bg-surface-alt)] transition-colors"
 					use:tooltip={"Archive"}
 					data-testid="archive-btn"
 				>
-					<Archive class="h-4 w-4" />
+					<Archive class="h-3.5 w-3.5" />
 				</button>
 			{/if}
 			{#if note.isShared && !note.isOwner}
 				<button
 					onclick={stop(() => leaveNote(note.id))}
-					class="rounded-lg p-1.5 hover:bg-[var(--border)]/10"
+					class="rounded-lg p-1.5 hover:bg-[var(--bg-surface-alt)] transition-colors"
 					use:tooltip={"Leave note"}
 					data-testid="leave-btn"
 				>
-					<UserMinus class="h-4 w-4" />
+					<UserMinus class="h-3.5 w-3.5" />
 				</button>
 			{:else}
 				<button
 					onclick={stop(() => trashNote(note.id))}
-					class="rounded-lg p-1.5 hover:bg-[var(--border)]/10"
+					class="rounded-lg p-1.5 hover:bg-[var(--bg-surface-alt)] transition-colors"
 					use:tooltip={"Trash"}
 					data-testid="trash-btn"
 				>
-					<Trash2 class="h-4 w-4" />
+					<Trash2 class="h-3.5 w-3.5" />
 				</button>
 			{/if}
 		{/if}
@@ -245,4 +252,3 @@
 		<ImageLightbox src={lightboxSrc} alt={lightboxAlt} onClose={() => lightboxSrc = null} />
 	{/if}
 </article>
-

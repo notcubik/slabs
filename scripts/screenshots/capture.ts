@@ -34,8 +34,8 @@ export async function captureDesktop(page: Page): Promise<void> {
 	await page.getByTestId('close-editor-btn').click();
 	await waitForApp(page);
 
-	// D3: Checklist — open "Bretzel Ingredients"
-	await noteCard(page, 'Bretzel Ingredients').click();
+	// D3: Checklist — open "Cookie Recipe"
+	await noteCard(page, 'Cookie Recipe').click();
 	await page.waitForSelector('[data-testid="note-editor"]');
 	await waitForApp(page);
 	await screenshot(page, 'screenshot-checklist.png');
@@ -95,8 +95,8 @@ export async function captureMobile(page: Page): Promise<void> {
 	await page.getByTestId('close-editor-btn').click();
 	await waitForApp(page);
 
-	// M3: Mobile checklist — open "Bretzel Ingredients"
-	await noteCard(page, 'Bretzel Ingredients').click();
+	// M3: Mobile checklist — open "Cookie Recipe"
+	await noteCard(page, 'Cookie Recipe').click();
 	await page.waitForSelector('[data-testid="note-editor"]');
 	await waitForApp(page);
 	await screenshot(page, 'screenshot-mobile-checklist.png');

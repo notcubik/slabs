@@ -1,6 +1,6 @@
 import type { NoteColor } from './index.js';
 
-export type ColorScheme = 'slates' | 'amber' | 'emerald' | 'ocean' | 'violet' | 'rose';
+export type ColorScheme = 'slates' | 'amber' | 'emerald' | 'ocean' | 'rose' | 'midnight' | 'forest';
 
 export interface UserPreferences {
 	theme: 'system' | 'light' | 'dark';

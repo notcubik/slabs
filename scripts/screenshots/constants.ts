@@ -6,13 +6,13 @@ export const DESKTOP_VIEWPORT = { width: 1280, height: 800 };
 export const MOBILE_VIEWPORT = { width: 390, height: 844 };
 
 export const ADMIN = {
-	email: 'admin@bretzel.app',
-	displayName: 'Bretzel Admin',
+	email: 'admin@slabs.app',
+	displayName: 'Slabs Admin',
 	password: crypto.randomUUID()
 };
 
 export const COLLABORATOR = {
-	email: 'salzig@bretzel.app',
-	displayName: 'Salzig Bretzel',
+	email: 'alice@slabs.app',
+	displayName: 'Alice Chen',
 	password: crypto.randomUUID()
 };

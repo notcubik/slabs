@@ -27,24 +27,23 @@ Open **http://localhost:3000** and create your admin account.
 
 ## Features
 
-- **Rich notes** — Markdown, checklists, image attachments, 12 color themes
-- **Tags** — `#hashtag` in editor, chip input with autocomplete, multi-tag filtering
-- **Themes** — 6 curated color schemes (Slates, Amber, Emerald, Ocean, Violet, Rose), each with light & dark
+- **Rich notes** — Markdown, checklists, image attachments
+- **Tags** — Custom tags, multi-tag filtering, tag management
+- **Themes** — 7 curated color schemes (Slate, Amber, Emerald, Ocean, Rose, Midnight, Forest), each with light & dark
 - **Save state** — Visual save indicator, explicit save button, auto-save
 - **Search** — Full-text across titles, content, and tags
 - **Version history** — Browse and restore previous versions
 - **Sharing** — Collaborate with other users, public share links
 - **Offline-first** — PWA with IndexedDB + CRDT sync
-- **MCP server** — AI assistants (Claude Code, etc.) can manage your notes
+- **MCP server** — AI assistants can manage your notes
 - **Multi-user** — Argon2 auth + OAuth/SSO (Google, GitHub, OIDC)
-- **Email notifications** — Optional SMTP for shares, security alerts
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
 | Framework | SvelteKit 2 + Svelte 5 runes |
-| UI | Tailwind CSS 4, Inter font |
+| UI | Tailwind CSS 4, DM Sans, Space Grotesk |
 | Database | SQLite + Drizzle ORM |
 | Auth | Argon2 + session cookies + OAuth/SSO |
 | Sync | LWW CRDTs over IndexedDB |
@@ -65,7 +64,7 @@ Open **http://localhost:3000** and create your admin account.
 
 See **[DEPLOYMENT.md](docs/DEPLOYMENT.md)** for a complete guide covering:
 - Docker Compose setup with HTTPS (Caddy/Nginx)
-- OAuth/SSO configuration (Authentik, Keycloak)
+- OAuth/SSO configuration
 - Email notifications (SMTP)
 - Backups and updates
 
@@ -79,8 +78,6 @@ pnpm test         # Unit + E2E tests
 pnpm build        # Production build
 ```
 
-Run `make help` for all available commands.
-
 ## License
 
-[MIT](LICENSE) — forked from [Crumbs by Bretzel](https://github.com/bretzel-app/crumbs).
+[MIT](LICENSE)

@@ -21,16 +21,12 @@
 	let showNewNote = $state(false);
 	let newNoteChecklist = $state(false);
 
-	// Sync store with route props and reload notes when filter changes
 	$effect(() => {
 		currentFilter.set(filter);
 		selectedTag.set(tag ? [tag] : []);
 		loadNotes(filter);
 	});
 
-	// Use SvelteKit's replaceState (not the raw history API) so the router keeps
-	// ownership of the entry — NoteEditor's close-on-back relies on popstate being
-	// handled by SvelteKit.
 	function openEditor(note: Note) {
 		editingNote = note;
 		replaceState(`#${note.id}`, {});
@@ -63,18 +59,18 @@
 
 {#if filter === 'all' && !tag}
 	<div class="mx-auto mb-6 hidden max-w-xl md:block">
-		<div class="flex cursor-pointer items-center gap-0 rounded-lg border border-dashed border-[var(--border-subtle)] bg-[var(--bg-surface)] transition-colors hover:border-[var(--primary)]">
+		<div class="flex cursor-pointer items-center gap-0 rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-surface)] transition-colors hover:border-[var(--primary)]/40 hover:bg-[var(--primary-muted)]/30">
 			<button
 				onclick={() => (showNewNote = true)}
-				class="flex flex-1 cursor-pointer items-center gap-3 px-4 py-3 text-left text-sm text-[var(--text-muted)] hover:text-[var(--primary)]"
+				class="flex flex-1 cursor-pointer items-center gap-3 px-4 py-3 text-left text-sm text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors"
 				data-testid="new-note-btn"
 			>
 				<Plus class="h-4 w-4" />
-				Add a note...
+				New note...
 			</button>
 			<button
 				onclick={() => { newNoteChecklist = true; showNewNote = true; }}
-				class="cursor-pointer rounded-lg p-3 text-[var(--text-muted)] hover:text-[var(--primary)]"
+				class="cursor-pointer rounded-xl p-3 text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors"
 				use:tooltip={"New checklist"}
 				data-testid="new-checklist-btn"
 			>
@@ -84,7 +80,7 @@
 	</div>
 	<button
 		onclick={() => (showNewNote = true)}
-		class="fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--primary)] text-white shadow-[var(--card-shadow)] transition-colors hover:bg-[var(--primary-hover)] md:hidden"
+		class="fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--primary)] text-white shadow-lg transition-all hover:bg-[var(--primary-hover)] hover:shadow-xl md:hidden"
 		aria-label="Add a note"
 		data-testid="new-note-fab"
 	>
@@ -92,23 +88,28 @@
 	</button>
 {/if}
 
-<div class="mb-4">
-	<TagFilter />
-</div>
+{#if filter === 'all' && !tag}
+	<div class="mb-4">
+		<TagFilter />
+	</div>
+{/if}
 
 {#if filter === 'archived'}
-	<h2 class="mb-4 text-lg font-medium text-[var(--text-muted)]">Archive</h2>
+	<h2 class="mb-4 font-display text-lg font-semibold text-[var(--text)]">Archive</h2>
 {:else if filter === 'trashed'}
-	<h2 class="mb-4 text-lg font-medium text-[var(--text-muted)]">Trash</h2>
+	<h2 class="mb-4 font-display text-lg font-semibold text-[var(--text)]">Trash</h2>
 {:else if tag}
-	<h2 class="mb-4 text-lg font-medium text-[var(--text-muted)]">#{tag}</h2>
+	<h2 class="mb-4 font-display text-lg font-semibold text-[var(--text)]">#{tag}</h2>
 {:else if $selectedTag.length > 0}
-	<h2 class="mb-4 text-lg font-medium text-[var(--text-muted)]">{$selectedTag.map(t => '#' + t).join(', ')}</h2>
+	<h2 class="mb-4 font-display text-lg font-semibold text-[var(--text)]">{$selectedTag.join(', ')}</h2>
 {/if}
 
 {#if $pinnedNotes.length > 0}
 	<div class="mb-6">
-		<NoteGrid notes={$pinnedNotes} label="Pinned" onEdit={openEditor} draggable dndType="pinned-notes" onReorder={handleReorder} />
+		<div class="mb-2 flex items-center gap-2 px-1">
+			<p class="text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">Pinned</p>
+		</div>
+		<NoteGrid notes={$pinnedNotes} onEdit={openEditor} draggable dndType="pinned-notes" onReorder={handleReorder} />
 	</div>
 {/if}
 
@@ -122,21 +123,22 @@
 />
 
 {#if $notesLoaded && $pinnedNotes.length === 0 && $unpinnedNotes.length === 0}
-	<div class="flex flex-col items-center justify-center py-20 text-[var(--text-muted)]">
-		<img src="/favicon.svg" alt="" class="mb-4 h-18 w-18" />
-		<p class="font-['Press_Start_2P'] text-xs">
+	<div class="flex flex-col items-center justify-center py-24 text-[var(--text-muted)]">
+		<img src="/favicon.svg" alt="" class="mb-4 h-16 w-16 opacity-40" />
+		<p class="font-display text-sm font-medium">
 			{#if filter === 'trashed'}
-				No notes in trash
+				Trash is empty
 			{:else if filter === 'archived'}
 				No archived notes
 			{:else if tag}
-				No notes with tag #{tag}
+				No notes with tag "{tag}"
 			{:else if $selectedTag.length > 0}
-				No notes with tags {$selectedTag.map(t => '#' + t).join(', ')}
+				No matching notes
 			{:else}
 				No notes yet
 			{/if}
 		</p>
+		<p class="mt-1 text-xs text-[var(--text-muted)]/60">Create one to get started</p>
 	</div>
 {/if}
 

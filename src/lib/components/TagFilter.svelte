@@ -21,9 +21,8 @@
 </script>
 
 {#if $allTags.length > 0}
-	<!-- svelte-ignore css_unused_selector -->
 	<div class="flex items-center gap-2">
-		<div class="tag-scroll flex gap-2 overflow-x-auto max-md:flex-nowrap md:flex-wrap" data-testid="tag-filter">
+		<div class="tag-scroll flex gap-1.5 overflow-x-auto max-md:flex-nowrap md:flex-wrap" data-testid="tag-filter">
 			{#each $allTags as tag}
 				<TagChip {tag} active={isTagActive(tag)} onclick={() => toggleTag(tag)} />
 			{/each}
@@ -31,7 +30,7 @@
 		{#if $selectedTag.length > 0}
 			<button
 				onclick={clearTags}
-				class="whitespace-nowrap rounded-lg px-2 py-0.5 text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text)] transition-colors"
+				class="whitespace-nowrap rounded-md px-2 py-0.5 text-xs font-medium text-[var(--text-muted)] hover:text-[var(--destructive)] transition-colors"
 				data-testid="clear-tags-btn"
 			>
 				Clear

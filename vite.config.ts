@@ -32,8 +32,8 @@ export default defineConfig({
 				description: 'A self-hostable, offline-first note-taking app',
 				start_url: '/',
 				display: 'standalone',
-				background_color: '#f8f9fc',
-				theme_color: '#3B82F6',
+			background_color: '#F7F7F8',
+			theme_color: '#6366F1',
 				icons: [
 					{ src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
 					{ src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' }

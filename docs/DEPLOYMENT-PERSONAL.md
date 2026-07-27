@@ -222,4 +222,4 @@ docker inspect --format='{{.State.Health.Status}}' slabs
 
 ---
 
-Forked from [Crumbs by Bretzel](https://github.com/bretzel-app/crumbs). MIT License.
+MIT License.

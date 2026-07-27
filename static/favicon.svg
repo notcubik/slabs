@@ -1,12 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#3B82F6"/>
-      <stop offset="100%" stop-color="#2563EB"/>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="50%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#A78BFA"/>
     </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-color="#6366F1" flood-opacity="0.3"/>
+    </filter>
   </defs>
-  <rect width="512" height="512" rx="96" ry="96" fill="url(#bg)"/>
-  <rect x="108" y="130" width="296" height="48" rx="8" fill="#fff" opacity="0.95"/>
-  <rect x="108" y="216" width="296" height="48" rx="8" fill="#fff" opacity="0.85"/>
-  <rect x="108" y="302" width="220" height="48" rx="8" fill="#fff" opacity="0.75"/>
+  <!-- Lightbulb body -->
+  <path d="M256 48C169 48 96 121 96 208c0 60 33 112 82 140v40c0 13 11 24 24 24h112c13 0 24-11 24-24v-40c49-28 82-80 82-140 0-87-73-160-164-160z" fill="url(#glow)" filter="url(#shadow)"/>
+  <!-- Filament rays -->
+  <line x1="256" y1="20" x2="256" y2="56" stroke="#C4B5FD" stroke-width="8" stroke-linecap="round"/>
+  <line x1="160" y1="60" x2="184" y2="88" stroke="#C4B5FD" stroke-width="8" stroke-linecap="round"/>
+  <line x1="352" y1="60" x2="328" y2="88" stroke="#C4B5FD" stroke-width="8" stroke-linecap="round"/>
+  <line x1="112" y1="140" x2="144" y2="152" stroke="#C4B5FD" stroke-width="8" stroke-linecap="round"/>
+  <line x1="400" y1="140" x2="368" y2="152" stroke="#C4B5FD" stroke-width="8" stroke-linecap="round"/>
+  <!-- Bulb base lines -->
+  <rect x="208" y="380" width="96" height="12" rx="6" fill="#DDD6FE"/>
+  <rect x="216" y="400" width="80" height="12" rx="6" fill="#DDD6FE"/>
+  <rect x="224" y="420" width="64" height="12" rx="6" fill="#DDD6FE"/>
+  <path d="M240 432c0 14 7 24 16 24s16-10 16-24" fill="none" stroke="#DDD6FE" stroke-width="8" stroke-linecap="round"/>
 </svg>

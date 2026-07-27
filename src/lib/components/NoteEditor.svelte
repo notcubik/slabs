@@ -623,7 +623,7 @@
 			{:else if rawMarkdownMode}
 				<textarea
 					bind:this={textareaEl}
-					placeholder="Add a crumb..."
+					placeholder="Start writing..."
 					bind:value={content}
 					class="min-h-[300px] w-full resize-none bg-transparent px-4 py-2 text-base md:text-sm text-[var(--text)] outline-none placeholder:text-[var(--text-muted)]"
 					rows="12"
@@ -635,7 +635,7 @@
 					onUpdate={(md) => (content = md)}
 					onEditor={(e) => (tiptapEditor = e)}
 					onTransaction={() => editorTick++}
-					placeholder="Add a crumb..."
+					placeholder="Start writing..."
 				/>
 			{/if}
 		</div>

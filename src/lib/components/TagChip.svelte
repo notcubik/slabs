@@ -11,18 +11,18 @@
 {#if onclick}
 	<button
 		{onclick}
-		class="whitespace-nowrap rounded-lg px-2 py-0.5 text-xs font-medium transition-colors {active
+		class="whitespace-nowrap rounded-md px-2 py-0.5 text-xs font-medium transition-colors {active
 			? 'bg-[var(--primary)] text-white'
-			: 'border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-muted)] hover:border-[var(--primary)]'}"
+			: 'bg-[var(--bg-surface-alt)] text-[var(--text-muted)] hover:bg-[var(--primary-muted)] hover:text-[var(--primary)]'}"
 		data-testid="tag-chip"
 	>
-		#{tag}
+		{tag}
 	</button>
 {:else}
 	<span
-		class="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-2 py-0.5 text-xs font-medium text-[var(--text-muted)]"
+		class="rounded-md bg-[var(--bg-surface-alt)] px-2 py-0.5 text-xs font-medium text-[var(--text-muted)]"
 		data-testid="tag-chip"
 	>
-		#{tag}
+		{tag}
 	</span>
 {/if}

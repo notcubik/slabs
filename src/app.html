@@ -2,12 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <!-- interactive-widget=resizes-content: on Android the keyboard shrinks the layout viewport via
-         the native inset path, so bottom-anchored UI (editor toolbar) lands exactly on the keyboard —
-         Chromium's visualViewport.height can under-report by the nav-bar height. iOS ignores this
-         attribute and relies on the visualViewport tracking in NoteEditor instead. -->
     <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content" />
-    <meta name="theme-color" content="#f8f9fc" />
+    <meta name="theme-color" content="#F7F7F8" />
     <script>
       (function() {
         try {
@@ -18,7 +14,7 @@
           if (t === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
             var m = document.querySelector('meta[name="theme-color"]');
-            if (m) m.content = '#0f1117';
+            if (m) m.content = '#09090B';
           }
           var cs = p.colorScheme || 'slates';
           document.documentElement.setAttribute('data-color', cs);

@@ -37,26 +37,28 @@
 
 {#if displayItems.length > 0}
 	{#if label}
-		<p class="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">{label}</p>
+		<p class="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">{label}</p>
 	{/if}
 	{#if draggable}
 		<div
-			class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+			class="columns-1 gap-4 sm:columns-2 md:columns-3 lg:columns-4"
 			data-testid="note-grid"
 			use:dndzone={{ items: localItems, flipDurationMs, type: dndType, dropTargetStyle: {}, delayTouchStart: 400 }}
 			onconsider={handleConsider}
 			onfinalize={handleFinalize}
 		>
 			{#each localItems as note (note.id)}
-				<div class="h-full outline-none" animate:flip={{ duration: flipDurationMs }}>
-					<NoteCard {note} {onEdit} fullHeight />
+				<div class="mb-4 break-inside-avoid outline-none" animate:flip={{ duration: flipDurationMs }}>
+					<NoteCard {note} {onEdit} />
 				</div>
 			{/each}
 		</div>
 	{:else}
-		<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" data-testid="note-grid">
+		<div class="columns-1 gap-4 sm:columns-2 md:columns-3 lg:columns-4" data-testid="note-grid">
 			{#each displayItems as note (note.id)}
-				<NoteCard {note} {onEdit} />
+				<div class="mb-4 break-inside-avoid">
+					<NoteCard {note} {onEdit} />
+				</div>
 			{/each}
 		</div>
 	{/if}

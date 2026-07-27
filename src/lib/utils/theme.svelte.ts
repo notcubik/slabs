@@ -1,8 +1,8 @@
 import { browser } from '$app/environment';
 import type { ColorScheme } from '$lib/types/preferences.js';
 
-const LIGHT_THEME_COLOR = '#f8f9fc';
-const DARK_THEME_COLOR = '#0f1117';
+const LIGHT_THEME_COLOR = '#F7F7F8';
+const DARK_THEME_COLOR = '#09090B';
 
 let darkMode = $state(false);
 
@@ -13,12 +13,10 @@ export function getIsDarkMode(): boolean {
 export function applyTheme(theme: 'system' | 'light' | 'dark'): void {
 	if (!browser) return;
 
-	// Validate input
 	if (theme !== 'system' && theme !== 'light' && theme !== 'dark') {
 		theme = 'system';
 	}
 
-	// Resolve system preference
 	let resolved = theme;
 	if (theme === 'system') {
 		const prefersDark =

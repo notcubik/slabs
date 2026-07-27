@@ -35,7 +35,7 @@ function getNotesData(): NoteData[] {
 - [x] MCP server integration
 - [ ] Bake the Docker image
 - [ ] Deploy to the homelab
-- [ ] Celebrate with a bretzel`,
+- [ ] Celebrate with a success`,
 			color: 'clay',
 			checklistMode: true
 		},
@@ -68,7 +68,7 @@ For slow mornings in the kitchen:
 
 - Farmer's market — get sourdough starter
 - Fix the Dokploy SSL cert renewal
-- Bake a batch of bretzels
+- Bake a batch of cookies
 
 ### Sunday
 
@@ -126,9 +126,9 @@ Just getting started. More to come.
 			color: 'fog'
 		},
 		{
-			key: 'bretzel',
-			title: 'Bretzel Ingredients',
-			content: `- [x] 500g bread flour
+			key: 'ingredients',
+			title: 'Cookie Recipe',
+			content: `- [x] 500g flour
 - [x] 300ml warm water
 - [x] 10g salt
 - [ ] 7g dry yeast
