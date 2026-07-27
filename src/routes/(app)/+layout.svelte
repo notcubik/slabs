@@ -37,14 +37,14 @@
 	<Header onMenuToggle={() => (sidebarOpen = !sidebarOpen)} />
 	<Sidebar open={sidebarOpen} onClose={() => (sidebarOpen = false)} />
 
-	<main id="main-content" class="flex-1 pt-4 transition-all duration-200 {sidebarOpen ? 'lg:ml-60' : ''}">
+	<main id="main-content" class="flex-1 pt-4 transition-[margin] duration-200 ease-out {sidebarOpen ? 'lg:ml-60' : ''}">
 		<div class="mx-auto max-w-7xl px-4">
 			{@render children()}
 		</div>
 	</main>
 
 	{#if !hideFooter}
-		<footer class="pb-4 pt-8 text-center text-xs text-[var(--text-muted)] opacity-60 {sidebarOpen ? 'lg:ml-60' : ''}" data-testid="app-footer">
+		<footer class="transition-[margin] duration-200 ease-out pb-4 pt-8 text-center text-xs text-[var(--text-muted)] opacity-60 {sidebarOpen ? 'lg:ml-60' : ''}" data-testid="app-footer">
 			slabs &mdash; your notes, your server
 		</footer>
 	{/if}

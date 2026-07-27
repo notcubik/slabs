@@ -142,7 +142,7 @@
 
 <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
 <article
-	class="group relative cursor-pointer rounded-xl border border-[var(--border-subtle)] p-4 text-[var(--text)] outline-none transition-all duration-150 hover:border-[var(--primary)]/30 shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] overflow-hidden flex flex-col {fullHeight ? 'h-full' : ''} {isCompact ? 'min-h-[6rem]' : isMedium ? 'min-h-[10rem]' : 'min-h-[14rem]'}"
+	class="group relative cursor-pointer rounded-xl border border-[var(--border-subtle)] p-4 text-[var(--text)] outline-none transition-all duration-150 ease-out hover:border-[var(--primary)]/30 shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] hover:scale-[1.01] overflow-hidden flex flex-col anim-pop-in {fullHeight ? 'h-full' : ''} {isCompact ? 'min-h-[6rem]' : isMedium ? 'min-h-[10rem]' : 'min-h-[14rem]'}"
 	style={cardStyle}
 	onclick={handleClick}
 	onkeydown={handleKeydown}
@@ -256,7 +256,7 @@
 	{/if}
 
 	<!-- Quick action bar (appears on hover) -->
-	<div class="absolute bottom-1.5 right-1.5 flex items-center gap-0.5 rounded-lg bg-[var(--bg-surface)]/90 backdrop-blur-sm border border-[var(--border-subtle)] px-1 py-0.5 shadow-sm max-md:opacity-100 md:opacity-0 transition-opacity duration-150 md:group-hover:opacity-100"
+	<div class="absolute bottom-1.5 right-1.5 flex items-center gap-0.5 rounded-lg bg-[var(--bg-surface)]/90 backdrop-blur-sm border border-[var(--border-subtle)] px-1 py-0.5 shadow-sm max-md:opacity-100 md:opacity-0 transition-all duration-150 md:group-hover:opacity-100 md:group-hover:scale-100 md:scale-95 md:group-hover:translate-y-0 md:translate-y-1"
 		onclick={(e) => e.stopPropagation()}
 		onkeydown={(e) => e.stopPropagation()}
 	>
@@ -292,7 +292,7 @@
 				{#if showColorPicker}
 					<div
 						bind:this={colorPickerEl}
-						class="absolute bottom-full right-0 z-50 mb-2 flex gap-1 rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] p-2 shadow-[var(--card-shadow-hover)]"
+						class="absolute bottom-full right-0 z-50 mb-2 flex gap-1 rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] p-2 shadow-[var(--card-shadow-hover)] anim-scale-in"
 					>
 						{#each Object.entries(NOTE_COLORS) as [value, { label, bg }]}
 							<button
@@ -353,7 +353,7 @@
 				{#if showMoreMenu}
 					<div
 						bind:this={moreMenuEl}
-						class="absolute bottom-full right-0 z-50 mb-2 w-40 rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] py-1 shadow-[var(--card-shadow-hover)]"
+						class="absolute bottom-full right-0 z-50 mb-2 w-40 rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] py-1 shadow-[var(--card-shadow-hover)] anim-scale-in"
 					>
 						{#if note.isShared && !note.isOwner}
 							<button

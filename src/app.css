@@ -149,12 +149,17 @@ body.editor-scroll-locked {
 }
 
 /* ═══════════════════════════════════════════════
-   ANIMATIONS
+   ANIMATIONS — smooth but fast (150ms ease-out)
    ═══════════════════════════════════════════════ */
 
 @keyframes fade-in {
 	from { opacity: 0; }
 	to { opacity: 1; }
+}
+
+@keyframes fade-in-up {
+	from { opacity: 0; transform: translateY(8px); }
+	to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes pop-in {
@@ -167,9 +172,43 @@ body.editor-scroll-locked {
 	to { transform: translateY(0); }
 }
 
+@keyframes scale-in {
+	from { opacity: 0; transform: scale(0.95); }
+	to { opacity: 1; transform: scale(1); }
+}
+
 @keyframes subtle-pulse {
 	0%, 100% { opacity: 1; }
 	50% { opacity: 0.6; }
+}
+
+/* Utility animation classes */
+.anim-fade-in { animation: fade-in 150ms ease-out both; }
+.anim-fade-in-up { animation: fade-in-up 150ms ease-out both; }
+.anim-pop-in { animation: pop-in 150ms ease-out both; }
+.anim-slide-up { animation: slide-up 150ms ease-out both; }
+.anim-scale-in { animation: scale-in 120ms ease-out both; }
+
+/* Stagger children — for note grids appearing */
+.stagger > :nth-child(1) { animation-delay: 0ms; }
+.stagger > :nth-child(2) { animation-delay: 20ms; }
+.stagger > :nth-child(3) { animation-delay: 40ms; }
+.stagger > :nth-child(4) { animation-delay: 60ms; }
+.stagger > :nth-child(5) { animation-delay: 80ms; }
+.stagger > :nth-child(6) { animation-delay: 100ms; }
+.stagger > :nth-child(7) { animation-delay: 120ms; }
+.stagger > :nth-child(8) { animation-delay: 140ms; }
+.stagger > :nth-child(9) { animation-delay: 160ms; }
+.stagger > :nth-child(10) { animation-delay: 180ms; }
+.stagger > :nth-child(11) { animation-delay: 200ms; }
+.stagger > :nth-child(12) { animation-delay: 220ms; }
+
+/* Press feedback for buttons */
+.press-feedback {
+	transition: transform 100ms ease-out, opacity 150ms ease-out;
+}
+.press-feedback:active {
+	transform: scale(0.97);
 }
 
 /* ═══════════════════════════════════════════════
@@ -374,13 +413,14 @@ body.editor-scroll-locked {
 }
 
 /* ═══════════════════════════════════════════════
-   FOCUS
+   FOCUS — smooth ring transition
    ═══════════════════════════════════════════════ */
 
 *:focus-visible {
 	outline: 2px solid var(--primary);
 	outline-offset: 2px;
 	border-radius: 4px;
+	transition: outline-offset 100ms ease-out;
 }
 
 button:focus-visible,

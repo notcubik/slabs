@@ -30,7 +30,7 @@
 		{#if $selectedTag.length > 0}
 			<button
 				onclick={clearTags}
-				class="whitespace-nowrap rounded-md px-2 py-0.5 text-xs font-medium text-[var(--text-muted)] hover:text-[var(--destructive)] transition-colors"
+				class="whitespace-nowrap rounded-md px-2 py-0.5 text-xs font-medium text-[var(--text-muted)] hover:text-[var(--destructive)] transition-all duration-150 active:scale-95"
 				data-testid="clear-tags-btn"
 			>
 				Clear

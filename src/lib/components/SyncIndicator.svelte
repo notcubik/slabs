@@ -45,7 +45,7 @@
 </script>
 
 <button
-	class="flex cursor-pointer items-center rounded-lg p-1 transition-colors hover:bg-[var(--border-subtle)]/50"
+	class="flex cursor-pointer items-center rounded-lg p-1 transition-all duration-150 hover:bg-[var(--border-subtle)]/50 active:scale-95"
 	title="Sync status: {status} — click to sync"
 	onclick={() => sync()}
 	data-testid="sync-indicator"

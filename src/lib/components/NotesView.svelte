@@ -79,11 +79,11 @@
 </script>
 
 {#if filter === 'all' && !tag}
-	<div class="mx-auto mb-6 hidden max-w-xl md:block">
-		<div class="flex cursor-pointer items-center gap-0 rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-surface)] transition-colors hover:border-[var(--primary)]/40 hover:bg-[var(--primary-muted)]/30">
+	<div class="mx-auto mb-6 hidden max-w-xl md:block anim-fade-in">
+		<div class="flex cursor-pointer items-center gap-0 rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-surface)] transition-all duration-150 hover:border-[var(--primary)]/40 hover:bg-[var(--primary-muted)]/30 hover:shadow-md">
 			<button
 				onclick={() => (showNewNote = true)}
-				class="flex flex-1 cursor-pointer items-center gap-3 px-4 py-3 text-left text-sm text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors"
+				class="flex flex-1 cursor-pointer items-center gap-3 px-4 py-3 text-left text-sm text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors duration-150"
 				data-testid="new-note-btn"
 			>
 				<Plus class="h-4 w-4" />
@@ -91,7 +91,7 @@
 			</button>
 			<button
 				onclick={() => { newNoteChecklist = true; showNewNote = true; }}
-				class="cursor-pointer rounded-xl p-3 text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors"
+				class="cursor-pointer rounded-xl p-3 text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors duration-150"
 				use:tooltip={"New checklist"}
 				data-testid="new-checklist-btn"
 			>
@@ -101,7 +101,7 @@
 	</div>
 	<button
 		onclick={() => (showNewNote = true)}
-		class="fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--primary)] text-white shadow-lg transition-all hover:bg-[var(--primary-hover)] hover:shadow-xl md:hidden"
+		class="fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/25 transition-all duration-150 hover:bg-[var(--primary-hover)] hover:shadow-xl hover:scale-105 active:scale-95 md:hidden"
 		aria-label="Add a note"
 		data-testid="new-note-fab"
 	>
@@ -116,13 +116,13 @@
 {/if}
 
 {#if filter === 'archived'}
-	<h2 class="mb-4 font-display text-lg font-semibold text-[var(--text)]">Archive</h2>
+	<h2 class="mb-4 font-display text-lg font-semibold text-[var(--text)] anim-fade-in-up">Archive</h2>
 {:else if filter === 'trashed'}
-	<h2 class="mb-4 font-display text-lg font-semibold text-[var(--text)]">Trash</h2>
+	<h2 class="mb-4 font-display text-lg font-semibold text-[var(--text)] anim-fade-in-up">Trash</h2>
 {:else if tag}
-	<h2 class="mb-4 font-display text-lg font-semibold text-[var(--text)]">#{tag}</h2>
+	<h2 class="mb-4 font-display text-lg font-semibold text-[var(--text)] anim-fade-in-up">#{tag}</h2>
 {:else if $selectedTag.length > 0}
-	<h2 class="mb-4 font-display text-lg font-semibold text-[var(--text)]">{$selectedTag.join(', ')}</h2>
+	<h2 class="mb-4 font-display text-lg font-semibold text-[var(--text)] anim-fade-in-up">{$selectedTag.join(', ')}</h2>
 {/if}
 
 {#if $pinnedNotes.length > 0}
@@ -145,7 +145,7 @@
 />
 
 {#if $notesLoaded && $pinnedNotes.length === 0 && $unpinnedNotes.length === 0}
-	<div class="flex flex-col items-center justify-center py-24 text-[var(--text-muted)]">
+	<div class="flex flex-col items-center justify-center py-24 text-[var(--text-muted)] anim-pop-in">
 		<img src="/favicon.svg" alt="" class="mb-4 h-16 w-16 opacity-40" />
 		<p class="font-display text-sm font-medium">
 			{#if filter === 'trashed'}

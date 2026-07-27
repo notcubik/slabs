@@ -35,7 +35,7 @@
 {#if open}
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
-		class="fixed inset-0 top-14 z-10 bg-black/20 backdrop-blur-sm lg:hidden"
+		class="fixed inset-0 top-14 z-10 bg-black/20 backdrop-blur-sm lg:hidden anim-fade-in"
 		onclick={onClose}
 		onkeydown={(e) => { if (e.key === 'Escape') onClose?.(); }}
 	></div>

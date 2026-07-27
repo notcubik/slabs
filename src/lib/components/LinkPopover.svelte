@@ -57,7 +57,7 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
 	bind:this={popoverEl}
-	class="fixed z-50 flex items-center gap-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-2 py-1.5 shadow-[var(--card-shadow)]"
+	class="fixed z-50 flex items-center gap-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] px-2 py-1.5 shadow-[var(--card-shadow)] anim-scale-in"
 	style="top: {top}px; left: {left}px;"
 	onclick={(e) => e.stopPropagation()}
 	onkeydown={(e) => e.stopPropagation()}

@@ -20,13 +20,13 @@
 	{:else}
 		<button
 			onclick={onMenuToggle}
-			class="rounded-lg p-1.5 hover:bg-[var(--primary-subtle)] transition-colors"
+			class="rounded-lg p-1.5 text-[var(--text-muted)] hover:bg-[var(--primary-subtle)] hover:text-[var(--text)] transition-all duration-150 active:scale-95"
 			aria-label="Toggle sidebar"
 		>
-			<Menu class="h-5 w-5 text-[var(--text-muted)]" />
+			<Menu class="h-5 w-5" />
 		</button>
 
-		<a href="/" class="flex items-center gap-2">
+		<a href="/" class="flex items-center gap-2 transition-opacity duration-150 hover:opacity-80">
 			<img src="/favicon.svg" alt="" class="h-7 w-7 shrink-0" />
 			<h1 class="text-lg font-bold tracking-tight text-[var(--text)]" style="font-family: 'Sora', system-ui, sans-serif;">slabs</h1>
 		</a>
@@ -37,10 +37,10 @@
 
 		<button
 			onclick={() => (mobileSearchOpen = true)}
-			class="ml-auto rounded-lg p-1.5 hover:bg-[var(--primary-subtle)] transition-colors lg:hidden"
+			class="ml-auto rounded-lg p-1.5 text-[var(--text-muted)] hover:bg-[var(--primary-subtle)] hover:text-[var(--text)] transition-all duration-150 active:scale-95 lg:hidden"
 			aria-label="Search"
 		>
-			<Search class="h-5 w-5 text-[var(--text-muted)]" />
+			<Search class="h-5 w-5" />
 		</button>
 
 		<div class="flex items-center gap-2">

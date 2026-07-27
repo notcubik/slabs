@@ -826,7 +826,7 @@
 		{@const isMobileTrigger = overflowAnchorEl === mobileOverflowBtnEl}
 		<div
 			bind:this={overflowMenuEl}
-			class="fixed z-50 w-max whitespace-nowrap rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] py-1 shadow-[var(--card-shadow)]"
+			class="fixed z-50 w-max whitespace-nowrap rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] py-1 shadow-[var(--card-shadow)] anim-scale-in"
 			style={isMobileTrigger ? `top: ${rect.bottom + 4}px; right: ${window.innerWidth - rect.right}px;` : `bottom: ${window.innerHeight - rect.top + 4}px; right: ${window.innerWidth - rect.right}px;`}
 			data-testid="overflow-menu"
 		>

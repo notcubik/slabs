@@ -8,7 +8,6 @@
 	let errorMsg = $state('');
 	let loading = $state(false);
 
-	// Check for OAuth error in URL
 	const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
 	if (urlParams?.get('error') === 'no_account') {
 		errorMsg = 'No account found for this email. Ask your admin for an invite.';
@@ -50,16 +49,19 @@
 	<title>Login - slabs</title>
 </svelte:head>
 
-<div class="w-full max-w-sm rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] p-8 shadow-[var(--card-shadow)]">
+<div class="w-full max-w-sm rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] p-8 shadow-[var(--card-shadow)] anim-pop-in">
 	<div class="mb-6 text-center">
-		<img src="/favicon.svg" alt="slabs" class="mx-auto h-12 w-12" />
+		<div class="relative mx-auto mb-3 h-12 w-12">
+			<div class="absolute inset-0 rounded-full bg-[var(--primary)] opacity-10 blur-md"></div>
+			<img src="/favicon.svg" alt="slabs" class="relative mx-auto h-12 w-12" />
+		</div>
 		<h1 class="font-display text-xl font-bold text-[var(--text)]">slabs</h1>
 		<p class="mt-2 text-sm text-[var(--text-muted)]">Sign in to continue</p>
 	</div>
 
 	<form onsubmit={handleLogin}>
 		{#if errorMsg}
-			<div class="mb-4 rounded-lg border border-[var(--error-border)] bg-[var(--error-bg)] p-3 text-sm text-[var(--error-text)]" data-testid="error-message">
+			<div class="mb-4 rounded-lg border border-[var(--error-border)] bg-[var(--error-bg)] p-3 text-sm text-[var(--error-text)] anim-fade-in" data-testid="error-message">
 				{errorMsg}
 			</div>
 		{/if}
@@ -68,7 +70,7 @@
 			type="email"
 			bind:value={email}
 			placeholder="Email"
-			class="mb-3 w-full rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-base)] px-4 py-3 text-sm text-[var(--text)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--primary)]"
+			class="mb-3 w-full rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-base)] px-4 py-3 text-sm text-[var(--text)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all duration-150"
 			data-testid="email-input"
 			required
 		/>
@@ -77,7 +79,7 @@
 			type="password"
 			bind:value={password}
 			placeholder="Password"
-			class="mb-4 w-full rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-base)] px-4 py-3 text-sm text-[var(--text)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--primary)]"
+			class="mb-4 w-full rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-base)] px-4 py-3 text-sm text-[var(--text)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all duration-150"
 			data-testid="password-input"
 			required
 		/>
@@ -85,7 +87,7 @@
 		<button
 			type="submit"
 			disabled={loading}
-			class="w-full rounded-lg bg-[var(--primary)] py-3 text-sm font-medium text-white transition-colors hover:bg-[var(--primary-hover)] disabled:opacity-50"
+			class="w-full rounded-lg bg-[var(--primary)] py-3 text-sm font-medium text-white transition-all duration-150 hover:bg-[var(--primary-hover)] hover:shadow-lg hover:shadow-[var(--primary)]/20 active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100"
 			data-testid="login-btn"
 		>
 			{loading ? 'Signing in...' : 'Sign in'}
@@ -103,7 +105,7 @@
 			{#each providers as provider (provider.id)}
 				<a
 					href="/api/auth/oauth/{provider.id}"
-					class="flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--border-subtle)] px-4 py-3 text-sm font-medium text-[var(--text)] transition-colors hover:border-[var(--primary)] hover:bg-[var(--bg-base)]"
+					class="flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--border-subtle)] px-4 py-3 text-sm font-medium text-[var(--text)] transition-all duration-150 hover:border-[var(--primary)]/40 hover:bg-[var(--bg-base)] hover:shadow-md active:scale-[0.98]"
 					data-testid="oauth-{provider.id}-btn"
 				>
 					{#if provider.id === 'google'}

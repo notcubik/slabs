@@ -96,14 +96,14 @@
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
-	class="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 pt-20 pb-10"
+	class="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 pt-20 pb-10 anim-fade-in"
 	onkeydown={(e) => { if (e.key === 'Escape') onClose(); }}
 	onclick={(e) => { if (e.target === e.currentTarget) onClose(); }}
 	data-testid="history-overlay"
 >
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
-		class="mx-4 flex w-full max-w-2xl flex-col overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] shadow-[var(--card-shadow)]"
+		class="mx-4 flex w-full max-w-2xl flex-col overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] shadow-[var(--card-shadow)] anim-pop-in"
 		onclick={(e) => e.stopPropagation()}
 		onkeydown={(e) => e.stopPropagation()}
 		data-testid="history-panel"

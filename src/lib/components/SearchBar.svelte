@@ -48,11 +48,6 @@
 			if (res.ok) {
 				const results: Note[] = await res.json();
 				if (searchController !== controller || query.trim() !== trimmedQuery) return;
-				// Commit the query alongside its results so the view switches to the
-				// (possibly empty) result set only once it's ready — this avoids
-				// flashing an empty state over the current notes while the request is
-				// in flight, and keeps searchQuery consistent with searchResults on
-				// a failed request (neither updates).
 				searchResults.set(results);
 				searchQuery.set(trimmedQuery);
 			}
@@ -79,10 +74,10 @@
 	}
 </script>
 
-<div class="relative flex-1 max-w-2xl">
-	<div class="flex items-center rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-base)] px-4 py-2 focus-within:border-[var(--primary)]">
+<div class="relative flex-1 max-w-2xl anim-fade-in">
+	<div class="flex items-center rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-base)] px-4 py-2 transition-all duration-150 focus-within:border-[var(--primary)] focus-within:ring-2 focus-within:ring-[var(--primary)]/15 focus-within:shadow-sm">
 		{#if onClose}
-			<button onclick={close} class="mr-2 text-[var(--text-muted)] hover:text-[var(--text)]" aria-label="Back">
+			<button onclick={close} class="mr-2 text-[var(--text-muted)] hover:text-[var(--text)] transition-colors duration-150" aria-label="Back">
 				<ArrowLeft class="h-5 w-5" />
 			</button>
 		{:else}
@@ -98,7 +93,7 @@
 			data-testid="search-input"
 		/>
 		{#if query}
-			<button onclick={clearSearch} class="ml-2 text-[var(--text-muted)] hover:text-[var(--text)]" aria-label="Clear search">
+			<button onclick={clearSearch} class="ml-2 text-[var(--text-muted)] hover:text-[var(--text)] transition-colors duration-150" aria-label="Clear search">
 				<X class="h-5 w-5" />
 			</button>
 		{/if}

@@ -355,7 +355,7 @@
 	
 	{#if openDropdown === 'heading'}
 		<div
-			class="fixed z-50 mb-1 min-w-[150px] rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] py-1"
+			class="fixed z-50 mb-1 min-w-[150px] rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] py-1 shadow-[var(--card-shadow)] anim-scale-in"
 			style={getDropdownStyle(rect, 170)}
 			data-dropdown="true"
 		>
@@ -389,7 +389,7 @@
 		</div>
 	{:else if openDropdown === 'list'}
 		<div
-			class="fixed z-50 mb-1 min-w-[170px] rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] py-1"
+			class="fixed z-50 mb-1 min-w-[170px] rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] py-1 shadow-[var(--card-shadow)] anim-scale-in"
 			style={getDropdownStyle(rect, 190)}
 			data-dropdown="true"
 		>
@@ -423,7 +423,7 @@
 		</div>
 	{:else if openDropdown === 'link'}
 		<div
-			class="fixed z-50 mb-1 min-w-[200px] rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] px-2 py-1.5"
+			class="fixed z-50 mb-1 min-w-[200px] rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] px-2 py-1.5 shadow-[var(--card-shadow)] anim-scale-in"
 			style={getDropdownStyle(rect, 220)}
 			data-dropdown="true"
 		>
@@ -475,7 +475,7 @@
 		</div>
 	{:else if openDropdown === 'table'}
 		<div
-			class="fixed z-50 mb-1 min-w-[190px] rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] py-1"
+			class="fixed z-50 mb-1 min-w-[190px] rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] py-1 shadow-[var(--card-shadow)] anim-scale-in"
 			style={getDropdownStyle(rect, 210)}
 			data-dropdown="true"
 		>
@@ -540,7 +540,7 @@
 		</div>
 	{:else if openDropdown === 'align'}
 		<div
-			class="fixed z-50 mb-1 min-w-[160px] rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] py-1"
+			class="fixed z-50 mb-1 min-w-[160px] rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] py-1 shadow-[var(--card-shadow)] anim-scale-in"
 			style={getDropdownStyle(rect, 180)}
 			data-dropdown="true"
 		>
