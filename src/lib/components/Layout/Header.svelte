@@ -12,7 +12,7 @@
 	let mobileSearchOpen = $state(false);
 </script>
 
-<header class="sticky top-0 z-30 flex h-14 items-center gap-4 border-b border-[var(--border)] bg-[var(--header-bg)] backdrop-blur-md px-4">
+<header class="sticky top-0 z-30 flex h-14 items-center gap-4 border-b border-[var(--border-subtle)] bg-[var(--header-bg)] backdrop-blur-md px-4">
 	{#if mobileSearchOpen}
 		<div class="flex flex-1 items-center gap-2 lg:hidden">
 			<SearchBar onClose={() => (mobileSearchOpen = false)} />
@@ -20,16 +20,16 @@
 	{:else}
 		<button
 			onclick={onMenuToggle}
-			class="rounded-lg p-1.5 hover:bg-[var(--bg-surface-alt)] transition-colors"
+			class="rounded-lg p-1.5 hover:bg-[var(--primary-subtle)] transition-colors"
 			aria-label="Toggle sidebar"
 		>
 			<Menu class="h-5 w-5 text-[var(--text-muted)]" />
 		</button>
 
-		<div class="flex items-center gap-2.5">
-			<img src="/favicon.svg" alt="" class="h-7 w-7" />
-			<h1 class="font-display text-lg font-semibold tracking-tight text-[var(--text)]">slabs</h1>
-		</div>
+		<a href="/" class="flex items-center gap-2">
+			<img src="/favicon.svg" alt="" class="h-7 w-7 shrink-0" />
+			<h1 class="text-lg font-bold tracking-tight text-[var(--text)]" style="font-family: 'Sora', system-ui, sans-serif;">slabs</h1>
+		</a>
 
 		<div class="mx-4 hidden flex-1 lg:block">
 			<SearchBar />
@@ -37,7 +37,7 @@
 
 		<button
 			onclick={() => (mobileSearchOpen = true)}
-			class="ml-auto rounded-lg p-1.5 hover:bg-[var(--bg-surface-alt)] transition-colors lg:hidden"
+			class="ml-auto rounded-lg p-1.5 hover:bg-[var(--primary-subtle)] transition-colors lg:hidden"
 			aria-label="Search"
 		>
 			<Search class="h-5 w-5 text-[var(--text-muted)]" />

@@ -2,10 +2,11 @@
 	import { getNoteColor } from '$lib/utils/colors.js';
 	import { getIsDarkMode } from '$lib/utils/theme.svelte.js';
 	import { renderMarkdown } from '$lib/utils/markdown.js';
-	import { togglePin, trashNote, archiveNote, unarchiveNote, restoreNote, deleteNote, leaveNote, currentFilter } from '$lib/stores/notes.js';
+	import { togglePin, trashNote, archiveNote, unarchiveNote, restoreNote, deleteNote, leaveNote, currentFilter, notes, updateNote } from '$lib/stores/notes.js';
 	import ImageLightbox from './ImageLightbox.svelte';
 	import SharingIndicator from './SharingIndicator.svelte';
-	import type { Note } from '$lib/types/index.js';
+	import type { Note, NoteColor } from '$lib/types/index.js';
+	import { NOTE_COLORS } from '$lib/utils/colors.js';
 	import Undo2 from 'lucide-svelte/icons/undo-2';
 	import Trash2 from 'lucide-svelte/icons/trash-2';
 	import Pin from 'lucide-svelte/icons/pin';
@@ -13,6 +14,10 @@
 	import ArchiveRestore from 'lucide-svelte/icons/archive-restore';
 	import UserMinus from 'lucide-svelte/icons/user-minus';
 	import Lock from 'lucide-svelte/icons/lock';
+	import MoreHorizontal from 'lucide-svelte/icons/ellipsis';
+	import Copy from 'lucide-svelte/icons/copy';
+	import Share2 from 'lucide-svelte/icons/share-2';
+	import Palette from 'lucide-svelte/icons/palette';
 	import { tooltip } from '$lib/utils/tooltip.js';
 	import { linkifyText } from '$lib/utils/checklist.js';
 
@@ -38,6 +43,11 @@
 	let cardStyle = $state('');
 	let lightboxSrc = $state<string | null>(null);
 	let lightboxAlt = $state('');
+	let showColorPicker = $state(false);
+	let showMoreMenu = $state(false);
+	let moreMenuEl = $state<HTMLDivElement | undefined>();
+	let moreBtnEl = $state<HTMLButtonElement | undefined>();
+	let colorPickerEl = $state<HTMLDivElement | undefined>();
 
 	const renderedContent = $derived(renderMarkdown(note.content));
 
@@ -60,7 +70,6 @@
 
 	const featuredAttachments = $derived((note.attachments ?? []).filter(a => a.featured));
 
-	// Dynamic height: estimate based on content length
 	const contentLength = $derived(
 		(note.title?.length ?? 0) + (note.content?.length ?? 0) +
 		(checklistItems.length * 30)
@@ -90,11 +99,50 @@
 			fn();
 		};
 	}
+
+	function handleDuplicate() {
+		showMoreMenu = false;
+		const { id, createdAt, updatedAt, version, ...rest } = note;
+		fetch('/api/notes', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ ...rest, title: `${rest.title || 'Untitled'} (copy)` })
+		}).then(res => res.json()).then(created => {
+			notes.update(list => [created, ...list]);
+		}).catch(() => {});
+	}
+
+	function handleShare() {
+		showMoreMenu = false;
+		onEdit(note);
+	}
+
+	function handleColorSelect(color: NoteColor) {
+		showColorPicker = false;
+		updateNote(note.id, { color });
+	}
+
+	// Close menus on outside click
+	$effect(() => {
+		if (!showMoreMenu && !showColorPicker) return;
+		function handleClickOutside(e: MouseEvent) {
+			const target = e.target as Node;
+			if (moreMenuEl?.contains(target) || moreBtnEl?.contains(target)) return;
+			if (colorPickerEl?.contains(target)) return;
+			showMoreMenu = false;
+			showColorPicker = false;
+		}
+		const timer = setTimeout(() => document.addEventListener('click', handleClickOutside), 0);
+		return () => {
+			clearTimeout(timer);
+			document.removeEventListener('click', handleClickOutside);
+		};
+	});
 </script>
 
 <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
 <article
-	class="group relative cursor-pointer rounded-xl border border-[var(--border-subtle)] p-4 text-[var(--text)] outline-none transition-all duration-150 hover:border-[var(--primary)]/40 shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] overflow-hidden flex flex-col {fullHeight ? 'h-full' : ''} {isCompact ? 'min-h-[6rem]' : isMedium ? 'min-h-[10rem]' : 'min-h-[14rem]'}"
+	class="group relative cursor-pointer rounded-xl border border-[var(--border-subtle)] p-4 text-[var(--text)] outline-none transition-all duration-150 hover:border-[var(--primary)]/30 shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] overflow-hidden flex flex-col {fullHeight ? 'h-full' : ''} {isCompact ? 'min-h-[6rem]' : isMedium ? 'min-h-[10rem]' : 'min-h-[14rem]'}"
 	style={cardStyle}
 	onclick={handleClick}
 	onkeydown={handleKeydown}
@@ -158,7 +206,6 @@
 	</div>
 
 	{#if isHidden}
-		<!-- Hidden note placeholder -->
 		<div class="flex flex-1 flex-col items-center justify-center gap-2 text-center">
 			<Lock class="h-6 w-6 text-[var(--text-muted)]/50" />
 			<p class="text-xs text-[var(--text-muted)]/70">Click to unlock</p>
@@ -200,7 +247,7 @@
 	{#if note.tags && note.tags.length > 0}
 		<div class="mt-auto pt-2 flex flex-wrap gap-1">
 			{#each note.tags.slice(0, 3) as tag}
-				<span class="rounded-md bg-[var(--primary-muted)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--primary)]">{tag}</span>
+				<span class="rounded-md bg-[var(--primary-subtle)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--primary)]">{tag}</span>
 			{/each}
 			{#if note.tags.length > 3}
 				<span class="rounded-md bg-[var(--bg-surface-alt)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--text-muted)]">+{note.tags.length - 3}</span>
@@ -208,12 +255,15 @@
 		</div>
 	{/if}
 
-	<!-- Action buttons -->
-	<div class="absolute bottom-1.5 right-1.5 flex gap-0.5 max-md:opacity-100 md:opacity-0 transition-opacity md:group-hover:opacity-100">
+	<!-- Quick action bar (appears on hover) -->
+	<div class="absolute bottom-1.5 right-1.5 flex items-center gap-0.5 rounded-lg bg-[var(--bg-surface)]/90 backdrop-blur-sm border border-[var(--border-subtle)] px-1 py-0.5 shadow-sm max-md:opacity-100 md:opacity-0 transition-opacity duration-150 md:group-hover:opacity-100"
+		onclick={(e) => e.stopPropagation()}
+		onkeydown={(e) => e.stopPropagation()}
+	>
 		{#if $currentFilter === 'trashed'}
 			<button
 				onclick={stop(() => restoreNote(note.id))}
-				class="rounded-lg p-1.5 text-[var(--text)] hover:bg-[var(--bg-surface-alt)] transition-colors"
+				class="rounded-md p-1.5 text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--primary-subtle)] transition-colors"
 				use:tooltip={"Restore"}
 				data-testid="restore-btn"
 			>
@@ -221,27 +271,58 @@
 			</button>
 			<button
 				onclick={stop(() => deleteNote(note.id))}
-				class="rounded-lg p-1.5 text-[var(--destructive)] hover:bg-[var(--destructive)]/10 transition-colors"
+				class="rounded-md p-1.5 text-[var(--text-muted)] hover:text-[var(--destructive)] hover:bg-[var(--destructive)]/10 transition-colors"
 				use:tooltip={"Delete forever"}
 				data-testid="delete-forever-btn"
 			>
 				<Trash2 class="h-3.5 w-3.5" />
 			</button>
 		{:else}
+			<!-- Color picker -->
+			<div class="relative">
+				<button
+					onclick={stop(() => { showColorPicker = !showColorPicker; showMoreMenu = false; })}
+					class="rounded-md p-1.5 text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--primary-subtle)] transition-colors"
+					use:tooltip={"Color"}
+					data-testid="color-btn"
+					bind:this={moreBtnEl}
+				>
+					<Palette class="h-3.5 w-3.5" />
+				</button>
+				{#if showColorPicker}
+					<div
+						bind:this={colorPickerEl}
+						class="absolute bottom-full right-0 z-50 mb-2 flex gap-1 rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] p-2 shadow-[var(--card-shadow-hover)]"
+					>
+						{#each Object.entries(NOTE_COLORS) as [value, { label, bg }]}
+							<button
+								onclick={(e) => { e.stopPropagation(); handleColorSelect(value as NoteColor); }}
+								class="h-6 w-6 rounded-full border-2 transition-transform hover:scale-110 {note.color === value ? 'border-[var(--primary)] scale-110' : 'border-[var(--border-subtle)]'}"
+								style="background-color: {bg}"
+								title={label}
+							></button>
+						{/each}
+					</div>
+				{/if}
+			</div>
+
+			<!-- Pin -->
 			{#if !note.pinned}
 				<button
 					onclick={stop(() => togglePin(note.id, note.pinned))}
-					class="rounded-lg p-1.5 text-[var(--text)] hover:bg-[var(--bg-surface-alt)] transition-colors"
+					class="rounded-md p-1.5 text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--primary-subtle)] transition-colors"
 					use:tooltip={"Pin"}
 					data-testid="pin-btn"
 				>
 					<Pin class="h-3.5 w-3.5" />
 				</button>
 			{/if}
+
+			<!-- Archive -->
 			{#if $currentFilter === 'archived'}
 				<button
 					onclick={stop(() => unarchiveNote(note.id))}
-					class="rounded-lg p-1.5 text-[var(--text)] hover:bg-[var(--bg-surface-alt)] transition-colors"
+					class="rounded-md p-1.5 text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--primary-subtle)] transition-colors"
 					use:tooltip={"Unarchive"}
 					data-testid="unarchive-btn"
 				>
@@ -250,32 +331,68 @@
 			{:else}
 				<button
 					onclick={stop(() => archiveNote(note.id))}
-					class="rounded-lg p-1.5 text-[var(--text)] hover:bg-[var(--bg-surface-alt)] transition-colors"
+					class="rounded-md p-1.5 text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--primary-subtle)] transition-colors"
 					use:tooltip={"Archive"}
 					data-testid="archive-btn"
 				>
 					<Archive class="h-3.5 w-3.5" />
 				</button>
 			{/if}
-			{#if note.isShared && !note.isOwner}
+
+			<!-- More menu -->
+			<div class="relative">
 				<button
-					onclick={stop(() => leaveNote(note.id))}
-					class="rounded-lg p-1.5 text-[var(--text)] hover:bg-[var(--bg-surface-alt)] transition-colors"
-					use:tooltip={"Leave note"}
-					data-testid="leave-btn"
+					onclick={stop(() => { showMoreMenu = !showMoreMenu; showColorPicker = false; })}
+					class="rounded-md p-1.5 text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--primary-subtle)] transition-colors"
+					use:tooltip={"More"}
+					data-testid="more-btn"
+					bind:this={moreBtnEl}
 				>
-					<UserMinus class="h-3.5 w-3.5" />
+					<MoreHorizontal class="h-3.5 w-3.5" />
 				</button>
-			{:else}
-				<button
-					onclick={stop(() => trashNote(note.id))}
-					class="rounded-lg p-1.5 text-[var(--text)] hover:bg-[var(--bg-surface-alt)] transition-colors"
-					use:tooltip={"Trash"}
-					data-testid="trash-btn"
-				>
-					<Trash2 class="h-3.5 w-3.5" />
-				</button>
-			{/if}
+				{#if showMoreMenu}
+					<div
+						bind:this={moreMenuEl}
+						class="absolute bottom-full right-0 z-50 mb-2 w-40 rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] py-1 shadow-[var(--card-shadow-hover)]"
+					>
+						{#if note.isShared && !note.isOwner}
+							<button
+								onclick={stop(() => { leaveNote(note.id); showMoreMenu = false; })}
+								class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-[var(--text-muted)] hover:bg-[var(--primary-subtle)] hover:text-[var(--text)]"
+								data-testid="leave-btn"
+							>
+								<UserMinus class="h-3.5 w-3.5" />
+								Leave note
+							</button>
+						{:else}
+							<button
+								onclick={stop(() => { trashNote(note.id); showMoreMenu = false; })}
+								class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-[var(--destructive)] hover:bg-[var(--destructive)]/10"
+								data-testid="trash-btn"
+							>
+								<Trash2 class="h-3.5 w-3.5" />
+								Delete
+							</button>
+						{/if}
+						<button
+							onclick={stop(handleDuplicate)}
+							class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-[var(--text-muted)] hover:bg-[var(--primary-subtle)] hover:text-[var(--text)]"
+							data-testid="duplicate-btn"
+						>
+							<Copy class="h-3.5 w-3.5" />
+							Duplicate
+						</button>
+						<button
+							onclick={stop(handleShare)}
+							class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-[var(--text-muted)] hover:bg-[var(--primary-subtle)] hover:text-[var(--text)]"
+							data-testid="share-btn"
+						>
+							<Share2 class="h-3.5 w-3.5" />
+							Share
+						</button>
+					</div>
+				{/if}
+			</div>
 		{/if}
 	</div>
 

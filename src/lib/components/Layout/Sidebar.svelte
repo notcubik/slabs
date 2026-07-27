@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { allTags, selectedTag, currentFilter } from '$lib/stores/notes.js';
-	import { StickyNote, Archive, Trash2, Tag, Settings, Pin } from 'lucide-svelte';
+	import { StickyNote, Archive, Trash2, Tag, Settings } from 'lucide-svelte';
 
 	interface Props {
 		open: boolean;
@@ -42,7 +42,7 @@
 {/if}
 
 <aside
-	class="fixed left-0 top-14 z-20 h-[calc(100vh-3.5rem)] w-60 transform border-r border-[var(--border)] bg-[var(--sidebar-bg)] transition-transform duration-200 ease-out {open ? 'translate-x-0' : '-translate-x-full'}"
+	class="fixed left-0 top-14 z-20 h-[calc(100vh-3.5rem)] w-60 transform bg-[var(--sidebar-bg)] transition-transform duration-200 ease-out {open ? 'translate-x-0' : '-translate-x-full'}"
 >
 	<nav class="flex h-full flex-col p-3">
 		<ul class="space-y-0.5">
@@ -51,7 +51,7 @@
 					<a
 						href={item.href}
 						onclick={closeMobile}
-						class="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors {item.match(page.url.pathname) ? 'bg-[var(--primary-muted)] text-[var(--primary)]' : 'text-[var(--text-muted)] hover:bg-[var(--bg-surface-alt)] hover:text-[var(--text)]'}"
+						class="sidebar-nav-item {item.match(page.url.pathname) ? 'active' : ''}"
 					>
 						<item.icon size={16} />
 						{item.label}
@@ -78,7 +78,7 @@
 						<li>
 							<button
 								onclick={() => { toggleSidebarTag(tag); closeMobile(); }}
-								class="flex w-full items-center gap-2.5 rounded-lg px-3 py-1.5 text-left text-sm transition-colors {$selectedTag.includes(tag) ? 'bg-[var(--primary-muted)] text-[var(--primary)] font-medium' : 'text-[var(--text-muted)] hover:bg-[var(--bg-surface-alt)] hover:text-[var(--text)]'}"
+								class="sidebar-nav-item {$selectedTag.includes(tag) ? 'active' : ''}"
 							>
 								<Tag size={14} />
 								<span class="truncate">{tag}</span>
@@ -91,10 +91,10 @@
 			<div class="flex-1"></div>
 		{/if}
 
-		<div class="border-t border-[var(--border)] pt-2">
+		<div class="pt-2">
 			<a
 				href="/settings"
-				class="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors {page.url.pathname.startsWith('/settings') ? 'bg-[var(--primary-muted)] text-[var(--primary)]' : 'text-[var(--text-muted)] hover:bg-[var(--bg-surface-alt)] hover:text-[var(--text)]'}"
+				class="sidebar-nav-item {page.url.pathname.startsWith('/settings') ? 'active' : ''}"
 				onclick={closeMobile}
 				data-testid="settings-link"
 			>

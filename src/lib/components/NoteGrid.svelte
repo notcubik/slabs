@@ -42,7 +42,7 @@
 	{/if}
 	{#if draggable}
 		<div
-			class="columns-1 gap-4 sm:columns-2 md:columns-3 lg:columns-4"
+			class="note-grid-mobile columns-1 gap-4 sm:columns-2 md:columns-3 lg:columns-4"
 			data-testid="note-grid"
 			use:dndzone={{ items: localItems, flipDurationMs, type: dndType, dropTargetStyle: {}, delayTouchStart: 400 }}
 			onconsider={handleConsider}
@@ -55,7 +55,7 @@
 		{/each}
 	</div>
 {:else}
-	<div class="columns-1 gap-4 sm:columns-2 md:columns-3 lg:columns-4" data-testid="note-grid">
+	<div class="note-grid-mobile columns-1 gap-4 sm:columns-2 md:columns-3 lg:columns-4" data-testid="note-grid">
 		{#each displayItems as note (note.id)}
 			<div class="mb-4 break-inside-avoid">
 				<NoteCard {note} {onEdit} {onUnlock} />
