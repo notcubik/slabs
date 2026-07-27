@@ -16,7 +16,7 @@
             var m = document.querySelector('meta[name="theme-color"]');
             if (m) m.content = '#09090B';
           }
-          var cs = p.colorScheme || 'slates';
+          var cs = p.accentColor || 'slates';
           document.documentElement.setAttribute('data-color', cs);
         } catch(e) {}
       })();

@@ -161,14 +161,14 @@ Theme switching uses CSS variable overrides on the `<html>` element:
 - **Reactivity**: a `$effect` in the root `+layout.svelte` watches the theme store and updates `document.documentElement.dataset.theme` on change
 - **Note card colors**: `getNoteColor()` in `src/lib/utils/colors.ts` accepts a `dark` boolean and returns the appropriate color variant per theme
 
-### Color Scheme System
+### Accent Color System
 
-Six accent color themes are available via the `data-color` attribute on `<html>`:
+Six accent colors are available via the `data-color` attribute on `<html>`, independent of light/dark mode:
 
-- **Implementation**: `[data-color="..."]` selectors in `src/app.css` override `--primary` and `--primary-hover` for both light and dark modes
-- **Persistence**: stored as `colorScheme` in the `userPreferences` key-value system (values: `"slates"` | `"amber"` | `"emerald"` | `"ocean"` | `"violet"` | `"rose"`)
+- **Implementation**: `[data-color="..."]` selectors in `src/app.css` override only `--primary` and `--primary-hover` for both light and dark modes
+- **Persistence**: stored as `accentColor` in the `userPreferences` key-value system (values: `"slates"` | `"amber"` | `"emerald"` | `"ocean"` | `"rose"` | `"violet"`)
 - **Picker UI**: `ThemePicker.svelte` renders color circles with selection ring feedback
-- **CSS cascade**: color scheme overrides sit between `:root` defaults and `[data-theme="dark"]` overrides, so dark mode correctly inherits the selected accent color
+- **CSS cascade**: accent color overrides sit after both `:root` defaults and `[data-theme="dark"]` overrides, ensuring the accent color always wins for `--primary`
 
 ### Tag Management
 

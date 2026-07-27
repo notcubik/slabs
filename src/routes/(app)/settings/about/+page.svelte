@@ -62,4 +62,19 @@
 			SvelteKit, SQLite, Drizzle ORM. Offline-first PWA with CRDT-based sync.
 		</p>
 	</section>
+
+	<section
+		class="space-y-2 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 shadow-[var(--card-shadow)]"
+	>
+		<h3 class="font-display text-sm font-bold text-[var(--text)]">Credits</h3>
+		<p class="text-sm leading-relaxed text-[var(--text-muted)]">
+			Slabs is a fork of
+			<a
+				href="https://github.com/bretzel-app/crumbs"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="text-[var(--primary)] underline-offset-2 hover:underline">Crumbs</a
+			>, an open-source note-taking app by Bretzel.
+		</p>
+	</section>
 </div>

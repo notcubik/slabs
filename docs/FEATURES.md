@@ -74,16 +74,15 @@
 
 ### Dark Mode
 - Three-way theme toggle: System / Light / Dark (in Settings > Preferences)
-- Dark mode uses a warm parchment variant — retro aesthetic preserved in both themes
 - Respects system `prefers-color-scheme` preference by default
 - FOUC-free: theme applied before first paint via a blocking inline script
 
 ### Theme System
-- 6 color themes: Slates, Amber, Emerald, Ocean, Violet, Rose
-- Each theme provides light and dark variants via `data-color` CSS attribute
+- Independent light/dark theme and accent color — choose each separately
+- 6 accent colors: Slate, Amber, Emerald, Ocean, Rose, Violet
+- Accent colors applied via `data-color` CSS attribute on `<html>`
 - Visual color picker in Settings > Preferences
-- Theme selection persists across sessions (localStorage + server sync)
-- CSS variable overrides ensure consistent theming across all UI components
+- Theme selection persists across sessions (localStorage)
 
 ### Save State
 - Visual save indicator shows current save status (saved / saving / unsaved)

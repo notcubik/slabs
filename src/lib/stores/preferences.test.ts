@@ -5,7 +5,7 @@ describe('preferences defaults', () => {
 	it('should have correct default values', () => {
 		expect(DEFAULT_PREFERENCES).toEqual({
 			theme: 'system',
-			colorScheme: 'slates',
+			accentColor: 'slates',
 			defaultNoteMode: 'richtext',
 			defaultNoteColor: 'default',
 			hideFooter: false,
@@ -16,8 +16,8 @@ describe('preferences defaults', () => {
 		});
 	});
 
-	it('should have slates as the default colorScheme', () => {
-		expect(DEFAULT_PREFERENCES.colorScheme).toBe('slates');
+	it('should have slates as the default accentColor', () => {
+		expect(DEFAULT_PREFERENCES.accentColor).toBe('slates');
 	});
 
 	it('should identify boolean preference keys', () => {
@@ -28,6 +28,6 @@ describe('preferences defaults', () => {
 		expect(BOOLEAN_PREF_KEYS.has('defaultNoteMode')).toBe(false);
 		expect(BOOLEAN_PREF_KEYS.has('defaultNoteColor')).toBe(false);
 		expect(BOOLEAN_PREF_KEYS.has('sidebarDefaultState')).toBe(false);
-		expect(BOOLEAN_PREF_KEYS.has('colorScheme')).toBe(false);
+		expect(BOOLEAN_PREF_KEYS.has('accentColor')).toBe(false);
 	});
 });

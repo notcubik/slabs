@@ -29,7 +29,7 @@ Open **http://localhost:3000** and create your admin account.
 
 - **Rich notes** — Markdown, checklists, image attachments
 - **Tags** — Custom tags, multi-tag filtering, tag management
-- **Themes** — 7 curated color schemes (Slate, Amber, Emerald, Ocean, Rose, Midnight, Forest), each with light & dark
+- **Themes** — Independent light/dark mode + 6 accent colors (Slate, Amber, Emerald, Ocean, Rose, Violet)
 - **Save state** — Visual save indicator, explicit save button, auto-save
 - **Search** — Full-text across titles, content, and tags
 - **Version history** — Browse and restore previous versions
@@ -81,3 +81,7 @@ pnpm build        # Production build
 ## License
 
 [MIT](LICENSE)
+
+---
+
+*Slabs is a fork of [Crumbs](https://github.com/bretzel-app/crumbs), an open-source note-taking app by Bretzel.*

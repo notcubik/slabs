@@ -4,7 +4,7 @@
 	import { pwaInfo } from 'virtual:pwa-info';
 	import { browser } from '$app/environment';
 	import { getPreferences } from '$lib/stores/preferences.svelte.js';
-	import { applyTheme, applyColorScheme } from '$lib/utils/theme.svelte.js';
+	import { applyTheme, applyAccentColor } from '$lib/utils/theme.svelte.js';
 
 	let { children } = $props();
 	let mediaQuery: MediaQueryList | undefined;
@@ -45,7 +45,7 @@
 
 	$effect(() => {
 		if (!browser) return;
-		applyColorScheme(prefs.colorScheme ?? 'slates');
+		applyAccentColor(prefs.accentColor ?? 'slates');
 	});
 
 	onDestroy(() => {

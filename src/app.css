@@ -3,17 +3,20 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 
+/* ═══════════════════════════════════════════════
+   LIGHT MODE (default) — the only place bg/text/border live
+   ═══════════════════════════════════════════════ */
 :root {
-	--bg-base: #F7F7F8;
+	--bg-base: #F4F4F5;
 	--bg-surface: #FFFFFF;
-	--bg-surface-alt: #F0F0F2;
+	--bg-surface-alt: #E4E4E7;
 	--primary: #6366F1;
 	--primary-hover: #4F46E5;
 	--primary-muted: #EEF2FF;
 	--text: #18181B;
 	--text-muted: #71717A;
-	--border: #E4E4E7;
-	--border-subtle: #F4F4F5;
+	--border: #D4D4D8;
+	--border-subtle: #E4E4E7;
 	--destructive: #EF4444;
 	--destructive-hover: #DC2626;
 	--error-bg: #FEF2F2;
@@ -21,25 +24,28 @@
 	--error-text: #B91C1C;
 	--success-bg: #F0FDF4;
 	--success-text: #166534;
-	--card-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
-	--card-shadow-hover: 0 10px 25px rgba(0,0,0,0.07), 0 4px 10px rgba(0,0,0,0.04);
+	--card-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+	--card-shadow-hover: 0 8px 24px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
 	--sidebar-bg: #FAFAFA;
-	--header-bg: rgba(255,255,255,0.85);
+	--header-bg: rgba(244,244,245,0.82);
 	--note-default: #FFFFFF;
 	--ring: 0 0 0 2px var(--primary);
 }
 
+/* ═══════════════════════════════════════════════
+   DARK MODE — overrides EVERYTHING for proper contrast
+   ═══════════════════════════════════════════════ */
 [data-theme="dark"] {
 	--bg-base: #09090B;
 	--bg-surface: #18181B;
 	--bg-surface-alt: #27272A;
 	--primary: #818CF8;
 	--primary-hover: #A5B4FC;
-	--primary-muted: rgba(129,140,248,0.12);
+	--primary-muted: rgba(129,140,248,0.15);
 	--text: #FAFAFA;
 	--text-muted: #A1A1AA;
-	--border: #27272A;
-	--border-subtle: #1F1F23;
+	--border: #3F3F46;
+	--border-subtle: #27272A;
 	--destructive: #F87171;
 	--destructive-hover: #FCA5A5;
 	--error-bg: #451A1A;
@@ -47,136 +53,43 @@
 	--error-text: #FCA5A5;
 	--success-bg: #14532D;
 	--success-text: #86EFAC;
-	--card-shadow: 0 1px 3px rgba(0,0,0,0.3);
-	--card-shadow-hover: 0 10px 25px rgba(0,0,0,0.4);
+	--card-shadow: 0 1px 3px rgba(0,0,0,0.4);
+	--card-shadow-hover: 0 8px 24px rgba(0,0,0,0.5);
 	--sidebar-bg: #111113;
-	--header-bg: rgba(9,9,11,0.85);
+	--header-bg: rgba(9,9,11,0.82);
 	--note-default: #18181B;
 	--ring: 0 0 0 2px var(--primary);
 }
 
-/* ── Amber ── */
-[data-color="amber"] {
-	--primary: #D97706;
-	--primary-hover: #B45309;
-	--primary-muted: #FEF3C7;
-	--ring: 0 0 0 2px var(--primary);
-}
-[data-color="amber"][data-theme="dark"] {
-	--primary: #FBBF24;
-	--primary-hover: #FCD34D;
-	--primary-muted: rgba(251,191,36,0.12);
-	--ring: 0 0 0 2px var(--primary);
-}
+/* ═══════════════════════════════════════════════
+   ACCENT COLORS — only override primary/accent, never bg/text
+   ═══════════════════════════════════════════════ */
 
-/* ── Emerald ── */
-[data-color="emerald"] {
-	--primary: #059669;
-	--primary-hover: #047857;
-	--primary-muted: #D1FAE5;
-	--ring: 0 0 0 2px var(--primary);
-}
-[data-color="emerald"][data-theme="dark"] {
-	--primary: #34D399;
-	--primary-hover: #6EE7B7;
-	--primary-muted: rgba(52,211,153,0.12);
-	--ring: 0 0 0 2px var(--primary);
-}
+[data-color="slates"] { --primary: #6366F1; --primary-hover: #4F46E5; }
+[data-color="slates"][data-theme="dark"] { --primary: #818CF8; --primary-hover: #A5B4FC; }
 
-/* ── Ocean ── */
-[data-color="ocean"] {
-	--primary: #0891B2;
-	--primary-hover: #0E7490;
-	--primary-muted: #CFFAFE;
-	--ring: 0 0 0 2px var(--primary);
-}
-[data-color="ocean"][data-theme="dark"] {
-	--primary: #22D3EE;
-	--primary-hover: #67E8F9;
-	--primary-muted: rgba(34,211,238,0.12);
-	--ring: 0 0 0 2px var(--primary);
-}
+[data-color="amber"] { --primary: #D97706; --primary-hover: #B45309; }
+[data-color="amber"][data-theme="dark"] { --primary: #FBBF24; --primary-hover: #FCD34D; }
 
-/* ── Rose ── */
-[data-color="rose"] {
-	--primary: #E11D48;
-	--primary-hover: #BE123C;
-	--primary-muted: #FFE4E6;
-	--ring: 0 0 0 2px var(--primary);
-}
-[data-color="rose"][data-theme="dark"] {
-	--primary: #FB7185;
-	--primary-hover: #FDA4AF;
-	--primary-muted: rgba(251,113,133,0.12);
-	--ring: 0 0 0 2px var(--primary);
-}
+[data-color="emerald"] { --primary: #059669; --primary-hover: #047857; }
+[data-color="emerald"][data-theme="dark"] { --primary: #34D399; --primary-hover: #6EE7B7; }
 
-/* ── Midnight (warm dark theme) ── */
-[data-color="midnight"] {
-	--bg-base: #0C0A14;
-	--bg-surface: #151321;
-	--bg-surface-alt: #1E1B2E;
-	--primary: #A78BFA;
-	--primary-hover: #C4B5FD;
-	--primary-muted: rgba(167,139,250,0.12);
-	--text: #F5F3FF;
-	--text-muted: #9489A8;
-	--border: #2A2640;
-	--border-subtle: #1E1B2E;
-	--sidebar-bg: #110F1D;
-	--header-bg: rgba(12,10,20,0.85);
-	--note-default: #151321;
-	--ring: 0 0 0 2px var(--primary);
-}
-[data-color="midnight"][data-theme="light"] {
-	--bg-base: #F5F3FF;
-	--bg-surface: #FFFFFF;
-	--bg-surface-alt: #EDE9FE;
-	--primary: #7C3AED;
-	--primary-hover: #6D28D9;
-	--primary-muted: #EDE9FE;
-	--text: #1E1B2E;
-	--text-muted: #6D6390;
-	--border: #DDD6FE;
-	--border-subtle: #EDE9FE;
-	--sidebar-bg: #FAF9FF;
-	--header-bg: rgba(245,243,255,0.85);
-	--note-default: #FFFFFF;
-	--ring: 0 0 0 2px var(--primary);
-}
+[data-color="ocean"] { --primary: #0891B2; --primary-hover: #0E7490; }
+[data-color="ocean"][data-theme="dark"] { --primary: #22D3EE; --primary-hover: #67E8F9; }
 
-/* ── Forest ── */
-[data-color="forest"] {
-	--bg-base: #F0FDF4;
-	--bg-surface: #FFFFFF;
-	--bg-surface-alt: #ECFDF5;
-	--primary: #16A34A;
-	--primary-hover: #15803D;
-	--primary-muted: #DCFCE7;
-	--text: #052E16;
-	--text-muted: #4D7C5E;
-	--border: #BBF7D0;
-	--border-subtle: #DCFCE7;
-	--sidebar-bg: #F7FDF9;
-	--header-bg: rgba(240,253,244,0.85);
-	--note-default: #FFFFFF;
-	--ring: 0 0 0 2px var(--primary);
-}
-[data-color="forest"][data-theme="dark"] {
-	--bg-base: #0A1F12;
-	--bg-surface: #132A1B;
-	--bg-surface-alt: #1A3624;
-	--primary: #4ADE80;
-	--primary-hover: #86EFAC;
-	--primary-muted: rgba(74,222,128,0.12);
-	--text: #F0FDF4;
-	--text-muted: #86C99B;
-	--border: #1F3D29;
-	--border-subtle: #162D1F;
-	--sidebar-bg: #0E2617;
-	--header-bg: rgba(10,31,18,0.85);
-	--note-default: #132A1B;
-	--ring: 0 0 0 2px var(--primary);
+[data-color="rose"] { --primary: #E11D48; --primary-hover: #BE123C; }
+[data-color="rose"][data-theme="dark"] { --primary: #FB7185; --primary-hover: #FDA4AF; }
+
+[data-color="violet"] { --primary: #7C3AED; --primary-hover: #6D28D9; }
+[data-color="violet"][data-theme="dark"] { --primary: #A78BFA; --primary-hover: #C4B5FD; }
+
+/* ═══════════════════════════════════════════════
+   BASE STYLES
+   ═══════════════════════════════════════════════ */
+
+html {
+	scroll-behavior: smooth;
+	scroll-padding-top: 4rem;
 }
 
 html, body {
@@ -193,7 +106,10 @@ body.editor-scroll-locked {
 	overflow: hidden;
 }
 
-/* ── Animations ── */
+/* ═══════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════ */
+
 @keyframes fade-in {
 	from { opacity: 0; }
 	to { opacity: 1; }
@@ -214,12 +130,18 @@ body.editor-scroll-locked {
 	50% { opacity: 0.6; }
 }
 
-/* ── Typography ── */
+/* ═══════════════════════════════════════════════
+   TYPOGRAPHY
+   ═══════════════════════════════════════════════ */
+
 .font-display {
 	font-family: 'Space Grotesk', system-ui, sans-serif;
 }
 
-/* ── Prose overrides ── */
+/* ═══════════════════════════════════════════════
+   PROSE / EDITOR OVERRIDES
+   ═══════════════════════════════════════════════ */
+
 .prose {
 	--tw-prose-body: var(--text);
 	--tw-prose-headings: var(--text);
@@ -253,7 +175,10 @@ body.editor-scroll-locked {
 	font-size: 0.875em;
 }
 
-/* ── Table styles ── */
+/* ═══════════════════════════════════════════════
+   TABLE STYLES
+   ═══════════════════════════════════════════════ */
+
 .tiptap table {
 	border-collapse: collapse;
 	width: 100%;
@@ -285,7 +210,10 @@ body.editor-scroll-locked {
 	background-color: var(--primary-muted);
 }
 
-/* ── Task list styles ── */
+/* ═══════════════════════════════════════════════
+   TASK LIST STYLES
+   ═══════════════════════════════════════════════ */
+
 .tiptap ul[data-type="taskList"],
 .prose ul.task-list {
 	list-style: none;
@@ -377,7 +305,10 @@ body.editor-scroll-locked {
 	pointer-events: none;
 }
 
-/* ── Tooltips ── */
+/* ═══════════════════════════════════════════════
+   TOOLTIPS — use surface + text for guaranteed contrast
+   ═══════════════════════════════════════════════ */
+
 .tooltip-popup {
 	position: fixed;
 	z-index: 9999;
@@ -386,21 +317,24 @@ body.editor-scroll-locked {
 	font-size: 0.75rem;
 	font-weight: 500;
 	line-height: 1.4;
-	color: #fff;
+	color: var(--bg-surface);
 	background: var(--text);
 	border-radius: 8px;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 	pointer-events: none;
 	white-space: nowrap;
 	opacity: 0;
-	transition: opacity 100ms ease-out;
+	transition: opacity 150ms ease-out;
 }
 
 .tooltip-visible {
 	opacity: 1;
 }
 
-/* ── Focus ── */
+/* ═══════════════════════════════════════════════
+   FOCUS
+   ═══════════════════════════════════════════════ */
+
 *:focus-visible {
 	outline: 2px solid var(--primary);
 	outline-offset: 2px;
@@ -413,7 +347,10 @@ a:focus-visible {
 	outline-offset: 2px;
 }
 
-/* ── Skip to main content ── */
+/* ═══════════════════════════════════════════════
+   ACCESSIBILITY
+   ═══════════════════════════════════════════════ */
+
 .sr-only {
 	position: absolute;
 	width: 1px;

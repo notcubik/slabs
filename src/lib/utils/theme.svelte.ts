@@ -1,7 +1,7 @@
 import { browser } from '$app/environment';
-import type { ColorScheme } from '$lib/types/preferences.js';
+import type { AccentColor } from '$lib/types/preferences.js';
 
-const LIGHT_THEME_COLOR = '#F7F7F8';
+const LIGHT_THEME_COLOR = '#F4F4F5';
 const DARK_THEME_COLOR = '#09090B';
 
 let darkMode = $state(false);
@@ -40,7 +40,7 @@ export function applyTheme(theme: 'system' | 'light' | 'dark'): void {
 	}
 }
 
-export function applyColorScheme(colorScheme: ColorScheme): void {
+export function applyAccentColor(accentColor: AccentColor): void {
 	if (!browser) return;
-	document.documentElement.setAttribute('data-color', colorScheme);
+	document.documentElement.setAttribute('data-color', accentColor);
 }

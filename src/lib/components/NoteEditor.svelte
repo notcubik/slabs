@@ -560,7 +560,7 @@
 	{#if !closing}
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
-		class="relative flex h-full w-full flex-col md:overflow-hidden border-0 md:h-auto md:max-w-xl md:mx-4 lg:max-w-2xl md:rounded-lg md:border md:border-[var(--border)] md:shadow-[var(--card-shadow)] animate-[slide-up_150ms_ease-out] md:animate-[pop-in_150ms_ease-out]"
+		class="relative flex h-full w-full flex-col md:overflow-hidden border-0 md:h-auto md:max-w-xl md:mx-4 lg:max-w-2xl md:rounded-lg md:border md:border-[var(--border)] md:shadow-[var(--card-shadow)] text-[var(--text)] animate-[slide-up_150ms_ease-out] md:animate-[pop-in_150ms_ease-out]"
 		style={bgStyle}
 		onkeydown={(e) => { e.stopPropagation(); handleKeydown(e); }}
 		data-testid="note-editor"

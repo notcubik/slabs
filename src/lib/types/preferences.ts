@@ -1,10 +1,10 @@
 import type { NoteColor } from './index.js';
 
-export type ColorScheme = 'slates' | 'amber' | 'emerald' | 'ocean' | 'rose' | 'midnight' | 'forest';
+export type AccentColor = 'slates' | 'amber' | 'emerald' | 'ocean' | 'rose' | 'violet';
 
 export interface UserPreferences {
 	theme: 'system' | 'light' | 'dark';
-	colorScheme: ColorScheme;
+	accentColor: AccentColor;
 	defaultNoteMode: 'richtext' | 'markdown';
 	defaultNoteColor: NoteColor;
 	hideFooter: boolean;
@@ -16,7 +16,7 @@ export interface UserPreferences {
 
 export const DEFAULT_PREFERENCES: UserPreferences = {
 	theme: 'system',
-	colorScheme: 'slates',
+	accentColor: 'slates',
 	defaultNoteMode: 'richtext',
 	defaultNoteColor: 'default',
 	hideFooter: false,

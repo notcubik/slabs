@@ -26,9 +26,9 @@
 		</div>
 	</div>
 
-	<!-- Color scheme -->
+	<!-- Accent color -->
 	<div class="space-y-3">
-		<span class="block text-sm font-semibold text-[var(--text)]">Color scheme</span>
+		<span class="block text-sm font-semibold text-[var(--text)]">Accent color</span>
 		<ThemePicker />
 	</div>
 

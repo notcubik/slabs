@@ -76,7 +76,7 @@
 
 <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
 <article
-	class="group relative cursor-pointer rounded-xl border border-[var(--border-subtle)] p-4 outline-none transition-all duration-150 hover:border-[var(--primary)]/40 shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] overflow-hidden flex flex-col {fullHeight ? 'h-full' : ''} {isCompact ? 'min-h-[6rem]' : isMedium ? 'min-h-[10rem]' : 'min-h-[14rem]'}"
+	class="group relative cursor-pointer rounded-xl border border-[var(--border-subtle)] p-4 text-[var(--text)] outline-none transition-all duration-150 hover:border-[var(--primary)]/40 shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] overflow-hidden flex flex-col {fullHeight ? 'h-full' : ''} {isCompact ? 'min-h-[6rem]' : isMedium ? 'min-h-[10rem]' : 'min-h-[14rem]'}"
 	style={cardStyle}
 	onclick={() => onEdit(note)}
 	onkeydown={(e) => e.key === 'Enter' && onEdit(note)}
@@ -182,7 +182,7 @@
 		{#if $currentFilter === 'trashed'}
 			<button
 				onclick={stop(() => restoreNote(note.id))}
-				class="rounded-lg p-1.5 hover:bg-[var(--bg-surface-alt)] transition-colors"
+				class="rounded-lg p-1.5 text-[var(--text)] hover:bg-[var(--bg-surface-alt)] transition-colors"
 				use:tooltip={"Restore"}
 				data-testid="restore-btn"
 			>
@@ -190,17 +190,17 @@
 			</button>
 			<button
 				onclick={stop(() => deleteNote(note.id))}
-				class="rounded-lg p-1.5 hover:bg-[var(--destructive)]/10 transition-colors"
+				class="rounded-lg p-1.5 text-[var(--destructive)] hover:bg-[var(--destructive)]/10 transition-colors"
 				use:tooltip={"Delete forever"}
 				data-testid="delete-forever-btn"
 			>
-				<Trash2 class="h-3.5 w-3.5 text-[var(--destructive)]" />
+				<Trash2 class="h-3.5 w-3.5" />
 			</button>
 		{:else}
 			{#if !note.pinned}
 				<button
 					onclick={stop(() => togglePin(note.id, note.pinned))}
-					class="rounded-lg p-1.5 hover:bg-[var(--bg-surface-alt)] transition-colors"
+					class="rounded-lg p-1.5 text-[var(--text)] hover:bg-[var(--bg-surface-alt)] transition-colors"
 					use:tooltip={"Pin"}
 					data-testid="pin-btn"
 				>
@@ -210,7 +210,7 @@
 			{#if $currentFilter === 'archived'}
 				<button
 					onclick={stop(() => unarchiveNote(note.id))}
-					class="rounded-lg p-1.5 hover:bg-[var(--bg-surface-alt)] transition-colors"
+					class="rounded-lg p-1.5 text-[var(--text)] hover:bg-[var(--bg-surface-alt)] transition-colors"
 					use:tooltip={"Unarchive"}
 					data-testid="unarchive-btn"
 				>
@@ -219,7 +219,7 @@
 			{:else}
 				<button
 					onclick={stop(() => archiveNote(note.id))}
-					class="rounded-lg p-1.5 hover:bg-[var(--bg-surface-alt)] transition-colors"
+					class="rounded-lg p-1.5 text-[var(--text)] hover:bg-[var(--bg-surface-alt)] transition-colors"
 					use:tooltip={"Archive"}
 					data-testid="archive-btn"
 				>
@@ -229,7 +229,7 @@
 			{#if note.isShared && !note.isOwner}
 				<button
 					onclick={stop(() => leaveNote(note.id))}
-					class="rounded-lg p-1.5 hover:bg-[var(--bg-surface-alt)] transition-colors"
+					class="rounded-lg p-1.5 text-[var(--text)] hover:bg-[var(--bg-surface-alt)] transition-colors"
 					use:tooltip={"Leave note"}
 					data-testid="leave-btn"
 				>
@@ -238,7 +238,7 @@
 			{:else}
 				<button
 					onclick={stop(() => trashNote(note.id))}
-					class="rounded-lg p-1.5 hover:bg-[var(--bg-surface-alt)] transition-colors"
+					class="rounded-lg p-1.5 text-[var(--text)] hover:bg-[var(--bg-surface-alt)] transition-colors"
 					use:tooltip={"Trash"}
 					data-testid="trash-btn"
 				>

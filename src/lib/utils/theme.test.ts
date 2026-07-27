@@ -14,7 +14,7 @@ describe('applyTheme', () => {
 		if (meta) meta.remove();
 		const metaEl = document.createElement('meta');
 		metaEl.setAttribute('name', 'theme-color');
-		metaEl.setAttribute('content', '#f0e6d3');
+		metaEl.setAttribute('content', '#F4F4F5');
 		document.head.appendChild(metaEl);
 
 		// Reset module state
@@ -37,14 +37,14 @@ describe('applyTheme', () => {
 	it('updates meta theme-color for dark mode', () => {
 		applyTheme('dark');
 		const meta = document.querySelector('meta[name="theme-color"]');
-		expect(meta?.getAttribute('content')).toBe('#1a1715');
+		expect(meta?.getAttribute('content')).toBe('#09090B');
 	});
 
 	it('updates meta theme-color for light mode', () => {
 		applyTheme('dark');
 		applyTheme('light');
 		const meta = document.querySelector('meta[name="theme-color"]');
-		expect(meta?.getAttribute('content')).toBe('#f0e6d3');
+		expect(meta?.getAttribute('content')).toBe('#F4F4F5');
 	});
 
 	it('falls back to system for unknown values', () => {
@@ -66,5 +66,27 @@ describe('applyTheme', () => {
 		});
 		applyTheme('system');
 		expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+	});
+});
+
+describe('applyAccentColor', () => {
+	let applyAccentColor: (accentColor: string) => void;
+
+	beforeEach(async () => {
+		document.documentElement.removeAttribute('data-color');
+		vi.resetModules();
+		const mod = await import('$lib/utils/theme.svelte.js');
+		applyAccentColor = mod.applyAccentColor;
+	});
+
+	it('sets data-color attribute', () => {
+		applyAccentColor('amber');
+		expect(document.documentElement.getAttribute('data-color')).toBe('amber');
+	});
+
+	it('changes data-color when switching accents', () => {
+		applyAccentColor('amber');
+		applyAccentColor('ocean');
+		expect(document.documentElement.getAttribute('data-color')).toBe('ocean');
 	});
 });
