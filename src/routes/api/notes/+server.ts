@@ -15,6 +15,9 @@ export const GET: RequestHandler = async ({ url, ...event }) => {
 export const POST: RequestHandler = async ({ request, ...event }) => {
 	const userId = getUserId(event);
 	const body = await request.json();
+	if (body.reminderAt !== undefined) {
+		body.reminderAt = body.reminderAt ? new Date(body.reminderAt) : null;
+	}
 	const newNote = createNote(db, userId, body);
 	return json(newNote, { status: 201 });
 };

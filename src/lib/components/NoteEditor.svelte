@@ -19,6 +19,7 @@
 	import { getNoteColor } from '$lib/utils/colors.js';
 	import { getIsDarkMode } from '$lib/utils/theme.svelte.js';
 	import { getPreferences } from '$lib/stores/preferences.svelte.js';
+	import { formatDate, formatTime } from '$lib/utils/format.svelte.js';
 	import type { Editor } from '@tiptap/core';
 	import type { Note, NoteColor, Attachment, Collaborator } from '$lib/types/index.js';
 	import Palette from 'lucide-svelte/icons/palette';
@@ -976,7 +977,7 @@
 				>
 					{#if reminderAt}
 						<Bell class="h-4 w-4 text-[var(--primary)]" />
-						<span>Reminder: {new Date(reminderAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} {new Date(reminderAt).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}</span>
+						<span>Reminder: {formatDate(reminderAt)} {formatTime(reminderAt)}</span>
 					{:else}
 						<Bell class="h-4 w-4" />
 						Set reminder

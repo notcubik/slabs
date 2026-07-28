@@ -9,6 +9,7 @@
 	import Bell from 'lucide-svelte/icons/bell';
 	import Calendar from 'lucide-svelte/icons/calendar';
 	import Clock from 'lucide-svelte/icons/clock';
+	import X from 'lucide-svelte/icons/x';
 
 	let currentMonth = $state(new Date().getMonth());
 	let currentYear = $state(new Date().getFullYear());
@@ -27,6 +28,15 @@
 	const daysInMonth = $derived(new Date(currentYear, currentMonth + 1, 0).getDate());
 	const firstDayOfWeek = $derived(new Date(currentYear, currentMonth, 1).getDay());
 
+	function notesForDate(dateKey: string) {
+		return reminderNotes.filter((n) => {
+			if (!n.reminderAt) return false;
+			const d = new Date(n.reminderAt);
+			const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+			return key === dateKey;
+		});
+	}
+
 	const calendarDays = $derived(() => {
 		const days: { day: number | null; dateKey: string }[] = [];
 		for (let i = 0; i < firstDayOfWeek; i++) {
@@ -38,15 +48,6 @@
 		}
 		return days;
 	});
-
-	function notesForDate(dateKey: string) {
-		return reminderNotes.filter((n) => {
-			if (!n.reminderAt) return false;
-			const d = new Date(n.reminderAt);
-			const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-			return key === dateKey;
-		});
-	}
 
 	function prevMonth() {
 		if (currentMonth === 0) {
@@ -89,7 +90,7 @@
 	<title>Reminders — slabs</title>
 </svelte:head>
 
-<div class="mx-auto max-w-4xl">
+<div class="mx-auto max-w-6xl">
 	<div class="mb-6">
 		<h1 class="text-2xl font-bold text-[var(--text)] font-display flex items-center gap-2">
 			<Bell class="h-6 w-6 text-[var(--primary)]" />
@@ -100,11 +101,11 @@
 		</p>
 	</div>
 
-	<div class="grid gap-6 lg:grid-cols-[1fr,280px]">
+	<div class="grid gap-6 lg:grid-cols-[1fr,320px]">
 		<!-- Calendar -->
 		<div class="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 shadow-[var(--card-shadow)]">
 			<!-- Month navigation -->
-			<div class="mb-4 flex items-center justify-between">
+			<div class="mb-6 flex items-center justify-between">
 				<button onclick={prevMonth} class="rounded-lg p-1.5 text-[var(--text-muted)] hover:bg-[var(--primary-subtle)] hover:text-[var(--text)] transition-colors">
 					<ChevronLeft class="h-5 w-5" />
 				</button>
@@ -117,9 +118,9 @@
 			</div>
 
 			<!-- Day headers -->
-			<div class="grid grid-cols-7 gap-1 mb-1">
+			<div class="grid grid-cols-7 gap-1 mb-2">
 				{#each dayNames as day}
-					<div class="py-1 text-center text-[10px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
+					<div class="py-1 text-center text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
 						{day}
 					</div>
 				{/each}
@@ -134,14 +135,17 @@
 						{@const dayNotes = notesForDate(dateKey)}
 						<button
 							onclick={() => selectedDate = selectedDate === dateKey ? null : dateKey}
-							class="aspect-square rounded-lg flex flex-col items-center justify-center gap-0.5 text-sm transition-all duration-150 relative {selectedDate === dateKey ? 'bg-[var(--primary-subtle)] ring-1 ring-[var(--primary)]' : 'hover:bg-[var(--bg-surface-alt)]'} {isToday(day) ? 'font-bold text-[var(--primary)]' : 'text-[var(--text)]'}"
+							class="aspect-square rounded-xl flex flex-col items-center justify-center gap-0.5 text-sm transition-all duration-150 relative {selectedDate === dateKey ? 'bg-[var(--primary)] text-white shadow-md scale-105 ring-2 ring-[var(--primary)] ring-offset-2' : 'hover:bg-[var(--primary-subtle)] hover:scale-105'} {isToday(day) ? 'font-bold' : ''}"
 						>
 							{day}
 							{#if dayNotes.length > 0}
 								<div class="flex gap-0.5">
-									{#each dayNotes.slice(0, 3) as n}
-										<span class="h-1.5 w-1.5 rounded-full" style="background-color: {getVividColor(n.color, isDark).bg}"></span>
+									{#each dayNotes.slice(0, 4) as n}
+										<span class="h-1.5 w-1.5 rounded-full" style="background-color: {selectedDate === dateKey ? '#fff' : getVividColor(n.color, isDark).bg}"></span>
 									{/each}
+									{#if dayNotes.length > 4}
+										<span class="text-[8px] font-semibold {selectedDate === dateKey ? 'text-white/80' : 'text-[var(--text-muted)]'}">+{dayNotes.length - 4}</span>
+									{/if}
 								</div>
 							{/if}
 						</button>
@@ -151,12 +155,20 @@
 		</div>
 
 		<!-- Sidebar: selected date or overview -->
-		<div class="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 shadow-[var(--card-shadow)]">
+		<div class="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 shadow-[var(--card-shadow)] {selectedDate ? 'ring-1 ring-[var(--primary)]' : ''} transition-all">
 			{#if selectedDate}
-				<h3 class="mb-3 text-sm font-semibold text-[var(--text)] flex items-center gap-1.5">
-					<Calendar class="h-4 w-4 text-[var(--primary)]" />
-					{new Date(selectedDate + 'T12:00:00').toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}
-				</h3>
+				<div class="flex items-center justify-between mb-4">
+					<h3 class="text-sm font-semibold text-[var(--text)] flex items-center gap-1.5">
+						<Calendar class="h-4 w-4 text-[var(--primary)]" />
+						{new Date(selectedDate + 'T12:00:00').toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}
+					</h3>
+					<button
+						onclick={() => selectedDate = null}
+						class="rounded-lg p-1 text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--bg-surface-alt)] transition-colors"
+					>
+						<X class="h-4 w-4" />
+					</button>
+				</div>
 				{#if selectedDateNotes.length === 0}
 					<p class="text-xs text-[var(--text-muted)]">No reminders on this day</p>
 				{:else}
@@ -183,16 +195,17 @@
 				{@const overdue = reminderNotes
 					.filter((n) => n.reminderAt && isOverdue(n.reminderAt))
 					.sort((a, b) => new Date(b.reminderAt!).getTime() - new Date(a.reminderAt!).getTime())
-					.slice(0, 4)}
+					.slice(0, 5)}
 				{@const upcoming = reminderNotes
 					.filter((n) => n.reminderAt && !isOverdue(n.reminderAt))
 					.sort((a, b) => new Date(a.reminderAt!).getTime() - new Date(b.reminderAt!).getTime())
-					.slice(0, 8)}
+					.slice(0, 10)}
 
 				{#if overdue.length > 0}
 					<h3 class="mb-3 text-sm font-semibold text-[var(--destructive)] flex items-center gap-1.5">
 						<Bell class="h-4 w-4" />
-						Overdue ({overdue.length})
+						Overdue
+						<span class="ml-auto text-[10px] font-normal text-[var(--text-muted)]">{overdue.length}</span>
 					</h3>
 					<div class="space-y-2 mb-5">
 						{#each overdue as n}

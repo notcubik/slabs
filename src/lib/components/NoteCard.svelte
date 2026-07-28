@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getNoteColor } from '$lib/utils/colors.js';
 	import { getIsDarkMode } from '$lib/utils/theme.svelte.js';
+	import { getTagStyle } from '$lib/utils/tag-colors.js';
 	import { renderMarkdown } from '$lib/utils/markdown.js';
 	import { togglePin, trashNote, archiveNote, unarchiveNote, restoreNote, deleteNote, leaveNote, currentFilter, notes, updateNote } from '$lib/stores/notes.js';
 	import ImageLightbox from './ImageLightbox.svelte';
@@ -144,7 +145,7 @@
 
 <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
 <article
-	class="group relative cursor-pointer rounded-xl border border-[var(--border-subtle)] p-4 text-[var(--text)] outline-none transition-all duration-150 ease-out shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] hover:scale-[1.01] overflow-hidden flex flex-col anim-pop-in {fullHeight ? 'h-full' : ''} {isCompact ? 'min-h-[6rem]' : isMedium ? 'min-h-[10rem]' : 'min-h-[14rem]'}"
+	class="group relative cursor-pointer rounded-xl border border-[var(--border-subtle)] p-5 text-[var(--text)] outline-none transition-all duration-150 ease-out shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] hover:scale-[1.01] overflow-hidden flex flex-col anim-pop-in {fullHeight ? 'h-full' : ''} {isCompact ? 'min-h-[8rem]' : isMedium ? 'min-h-[14rem]' : 'min-h-[18rem]'}"
 	style={cardStyle}
 	onclick={handleClick}
 	onkeydown={handleKeydown}
@@ -219,7 +220,7 @@
 		</div>
 	{:else}
 		{#if note.title}
-			<h3 class="mb-1.5 text-sm font-semibold text-[var(--text)] leading-snug">{note.title}</h3>
+			<h3 class="mb-2 text-base font-bold text-[var(--text)] leading-snug">{note.title}</h3>
 		{/if}
 
 		{#if note.checklistMode && checklistItems.length > 0}
@@ -245,19 +246,23 @@
 			{/if}
 		</ul>
 	{:else if note.content}
-		<div class="prose prose-sm line-clamp-6 max-w-none text-sm text-[var(--text-muted)] leading-relaxed" data-testid="note-content-preview">
+		<div class="prose prose-sm line-clamp-8 max-w-none text-sm text-[var(--text-muted)] leading-relaxed" data-testid="note-content-preview">
 			{@html renderedContent}
 		</div>
 	{/if}
 	{/if}
 
 	{#if note.tags && note.tags.length > 0}
-		<div class="mt-auto pt-2 flex flex-wrap gap-1">
-			{#each note.tags.slice(0, 3) as tag}
-				<span class="rounded-md bg-[var(--primary-subtle)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--primary)]">{tag}</span>
+		<div class="mt-auto pt-2 flex flex-wrap gap-1.5">
+			{#each note.tags.slice(0, 4) as tag}
+				{@const style = getTagStyle(tag, getIsDarkMode())}
+				<span class="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-medium" style="background-color: {style.bg}; color: {style.text};">
+					<span class="h-1.5 w-1.5 rounded-full" style="background-color: {style.dot}"></span>
+					{tag}
+				</span>
 			{/each}
-			{#if note.tags.length > 3}
-				<span class="rounded-md bg-[var(--bg-surface-alt)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--text-muted)]">+{note.tags.length - 3}</span>
+			{#if note.tags.length > 4}
+				<span class="rounded-md bg-[var(--bg-surface-alt)] px-2 py-0.5 text-[10px] font-medium text-[var(--text-muted)]">+{note.tags.length - 4}</span>
 			{/if}
 		</div>
 	{/if}

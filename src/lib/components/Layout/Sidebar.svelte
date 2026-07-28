@@ -2,6 +2,8 @@
 	import { page } from '$app/state';
 	import { allTags, selectedTag, currentFilter, loadNotes } from '$lib/stores/notes.js';
 	import { StickyNote, Archive, Trash2, Tag, Pencil, Check, X, Plus, Bell } from 'lucide-svelte';
+	import { getIsDarkMode } from '$lib/utils/theme.svelte.js';
+	import { getTagStyle } from '$lib/utils/tag-colors.js';
 
 	interface Props {
 		open: boolean;
@@ -108,10 +110,10 @@
 {/if}
 
 <aside
-	class="fixed left-0 top-14 z-20 h-[calc(100vh-3.5rem)] w-72 transform bg-[var(--bg-base)] transition-transform duration-200 ease-out {open ? 'translate-x-0' : '-translate-x-full'}"
+	class="fixed left-0 top-14 z-20 h-[calc(100vh-3.5rem)] w-80 transform bg-[var(--bg-base)] transition-transform duration-200 ease-out {open ? 'translate-x-0' : '-translate-x-full'}"
 >
-	<nav class="flex h-full flex-col p-3">
-		<ul class="space-y-0.5">
+	<nav class="flex h-full flex-col p-4">
+		<ul class="space-y-1">
 			{#each navItems as item}
 				<li>
 					<a
@@ -126,10 +128,10 @@
 			{/each}
 		</ul>
 
-		{#if $allTags.length > 0}
-			<div class="mt-5 flex-1 overflow-y-auto">
-				<div class="mb-2 flex items-center justify-between px-3">
-					<h3 class="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">Tags</h3>
+		{#if $allTags.length > 0 || showTagInput}
+			<div class="mt-8 flex-1 overflow-y-auto">
+				<div class="mb-3 flex items-center justify-between px-3">
+					<h3 class="text-[11px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">Tags</h3>
 					<div class="flex items-center gap-1">
 						{#if $selectedTag.length > 0}
 							<button
@@ -178,7 +180,7 @@
 					</div>
 				{/if}
 
-				<ul class="space-y-0.5">
+				<ul class="space-y-1">
 					{#each tagsWithId as tag (tag.id)}
 						{#if editingTagId === tag.id}
 							<li class="anim-fade-in">
@@ -213,7 +215,7 @@
 										onclick={() => { toggleSidebarTag(tag.name); closeMobile(); }}
 										class="sidebar-nav-item flex-1 {$selectedTag.includes(tag.name) ? 'active' : ''}"
 									>
-										<Tag size={14} />
+										<span class="h-2 w-2 rounded-full flex-shrink-0" style="background-color: {getTagStyle(tag.name, getIsDarkMode()).dot}"></span>
 										<span class="truncate">{tag.name}</span>
 									</button>
 									<div class="mr-1 flex items-center gap-0.5 opacity-0 group-hover/tag:opacity-100 transition-opacity duration-150">
@@ -252,7 +254,7 @@
 				</ul>
 			</div>
 		{:else}
-			<div class="flex-1"></div>
+			<div class="mt-8 flex-1"></div>
 		{/if}
 	</nav>
 </aside>

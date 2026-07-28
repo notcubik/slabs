@@ -43,6 +43,10 @@ export async function processSyncPush(db: Db, changes: SyncQueueItem[], userId: 
 						if (change.data.title !== undefined) sharedData.title = change.data.title;
 						if (change.data.color !== undefined) sharedData.color = change.data.color;
 						if (change.data.checklistMode !== undefined) sharedData.checklistMode = change.data.checklistMode;
+						if (change.data.reminderAt !== undefined) {
+							const ra = change.data.reminderAt;
+							sharedData.reminderAt = ra ? new Date(ra) : null;
+						}
 
 						// Content: merge only when the client saved from an older note version.
 						if (change.data.content !== undefined && change.data.content !== note.content) {
@@ -131,6 +135,7 @@ export async function processSyncPush(db: Db, changes: SyncQueueItem[], userId: 
 								trashed: change.data.trashed || false,
 								checklistMode: change.data.checklistMode || false,
 								sortOrder: change.data.sortOrder || 0,
+								reminderAt: change.data.reminderAt ? new Date(change.data.reminderAt) : null,
 								createdAt: new Date(change.timestamp),
 								updatedAt: new Date(change.timestamp),
 								version: 1
@@ -201,6 +206,7 @@ export async function getChangesSince(db: Db, sinceTimestamp: number, userId: nu
 			trashedAt: notes.trashedAt,
 			checklistMode: notes.checklistMode,
 			sortOrder: sql<number>`COALESCE(${noteUserState.sortOrder}, 0)`.as('user_sort_order'),
+			reminderAt: notes.reminderAt,
 			createdAt: notes.createdAt,
 			updatedAt: notes.updatedAt,
 			version: notes.version

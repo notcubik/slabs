@@ -1,5 +1,7 @@
 <script lang="ts">
   import { X } from 'lucide-svelte';
+  import { getTagStyle } from '$lib/utils/tag-colors.js';
+  import { getIsDarkMode } from '$lib/utils/theme.svelte.js';
 
   interface Props {
     tags: string[];
@@ -61,13 +63,17 @@
     }
     showAutocomplete = filteredTags.length > 0;
   }
+
+  const isDark = $derived(getIsDarkMode());
 </script>
 
 <div class="flex flex-wrap items-center gap-1.5">
   {#each tags as tag}
-    <span class="inline-flex items-center gap-1 rounded-full bg-[var(--primary)]/10 px-2 py-0.5 text-xs font-medium text-[var(--primary)]">
-      #{tag}
-      <button onclick={() => removeTag(tag)} class="hover:text-[var(--destructive)]" aria-label="Remove tag {tag}">
+    {@const style = getTagStyle(tag, isDark)}
+    <span class="inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-xs font-medium" style="background-color: {style.bg}; color: {style.text};">
+      <span class="h-1.5 w-1.5 rounded-full" style="background-color: {style.dot}"></span>
+      {tag}
+      <button onclick={() => removeTag(tag)} class="hover:text-[var(--destructive)] transition-colors ml-0.5" aria-label="Remove tag {tag}">
         <X size={12} />
       </button>
     </span>
@@ -86,13 +92,15 @@
       data-testid="tag-input"
     />
     {#if showAutocomplete && filteredTags.length > 0}
-      <div class="absolute left-0 top-full z-50 mt-1 max-h-32 w-40 overflow-y-auto rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] py-1 shadow-[var(--card-shadow)]">
+      <div class="absolute left-0 top-full z-50 mt-1 max-h-32 w-44 overflow-y-auto rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] py-1 shadow-[var(--card-shadow)]">
         {#each filteredTags.slice(0, 8) as tag}
+          {@const s = getTagStyle(tag, isDark)}
           <button
             onmousedown={() => addTag(tag)}
-            class="w-full px-2 py-1 text-left text-xs text-[var(--text)] hover:bg-[var(--border-subtle)]"
+            class="flex w-full items-center gap-2 px-2 py-1.5 text-left text-xs text-[var(--text)] hover:bg-[var(--border-subtle)]"
           >
-            #{tag}
+            <span class="h-1.5 w-1.5 rounded-full flex-shrink-0" style="background-color: {s.dot}"></span>
+            {tag}
           </button>
         {/each}
       </div>

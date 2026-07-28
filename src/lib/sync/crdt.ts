@@ -1,7 +1,7 @@
 import type { Note } from '$lib/types/index.js';
 
 /** Fields that can be individually merged between local and remote notes */
-const MUTABLE_FIELDS = ['title', 'content', 'color', 'pinned', 'archived', 'trashed', 'checklistMode', 'sortOrder'] as const;
+const MUTABLE_FIELDS = ['title', 'content', 'color', 'pinned', 'archived', 'trashed', 'checklistMode', 'sortOrder', 'reminderAt'] as const;
 
 /**
  * Last-Write-Wins (LWW) merge strategy with pending-field protection.
@@ -48,7 +48,8 @@ export function hasChanges(local: Note, remote: Note): boolean {
 		local.archived !== remote.archived ||
 		local.trashed !== remote.trashed ||
 		local.checklistMode !== remote.checklistMode ||
-		local.sortOrder !== remote.sortOrder
+		local.sortOrder !== remote.sortOrder ||
+		local.reminderAt !== remote.reminderAt
 	);
 }
 
@@ -69,6 +70,7 @@ export function diffNotes(
 	if (oldNote.trashed !== newNote.trashed) diff.trashed = newNote.trashed;
 	if (oldNote.checklistMode !== newNote.checklistMode) diff.checklistMode = newNote.checklistMode;
 	if (oldNote.sortOrder !== newNote.sortOrder) diff.sortOrder = newNote.sortOrder;
+	if (oldNote.reminderAt !== newNote.reminderAt) diff.reminderAt = newNote.reminderAt;
 
 	return diff;
 }

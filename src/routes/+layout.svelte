@@ -43,7 +43,7 @@
 
 	$effect(() => {
 		if (!browser) return;
-		applyAccentColor(getPreferences().accentColor ?? 'slates');
+		applyAccentColor(getPreferences().accentColor ?? 'slates', getPreferences().customAccentColor);
 	});
 
 	onDestroy(() => {

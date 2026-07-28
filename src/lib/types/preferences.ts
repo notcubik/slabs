@@ -1,6 +1,6 @@
 import type { NoteColor } from './index.js';
 
-export type AccentColor = 'slates' | 'amber' | 'emerald' | 'ocean' | 'rose' | 'violet';
+export type AccentColor = 'slates' | 'amber' | 'emerald' | 'ocean' | 'rose' | 'violet' | 'sky' | 'teal' | 'lime' | 'orange' | 'pink' | 'purple' | 'indigo' | 'red' | 'green' | 'blue' | 'yellow' | 'cyan' | 'custom';
 export type ThemeValue = 'system' | 'light' | 'dark' | 'dark-contrast';
 export type DateFormat = 'MM/DD/YYYY' | 'DD/MM/YYYY' | 'YYYY-MM-DD';
 export type TimeFormat = '12h' | '24h';
@@ -8,6 +8,7 @@ export type TimeFormat = '12h' | '24h';
 export interface UserPreferences {
 	theme: ThemeValue;
 	accentColor: AccentColor;
+	customAccentColor: string;
 	defaultNoteMode: 'richtext' | 'markdown';
 	defaultNoteColor: NoteColor;
 	hideFooter: boolean;
@@ -22,6 +23,7 @@ export interface UserPreferences {
 export const DEFAULT_PREFERENCES: UserPreferences = {
 	theme: 'system',
 	accentColor: 'slates',
+	customAccentColor: '#6366F1',
 	defaultNoteMode: 'richtext',
 	defaultNoteColor: 'default',
 	hideFooter: false,
