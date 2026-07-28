@@ -34,7 +34,7 @@
 
 <div class="flex min-h-screen flex-col bg-[var(--bg-base)] text-[var(--text)]">
 	<a href="#main-content" class="sr-only sr-only-focusable">Skip to content</a>
-	<Header onMenuToggle={() => (sidebarOpen = !sidebarOpen)} />
+	<Header onMenuToggle={() => (sidebarOpen = !sidebarOpen)} user={data.user} />
 	<Sidebar open={sidebarOpen} onClose={() => (sidebarOpen = false)} />
 
 	<main id="main-content" class="flex-1 pt-4 transition-[margin] duration-200 ease-out {sidebarOpen ? 'lg:ml-60' : ''}">

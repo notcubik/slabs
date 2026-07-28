@@ -11,6 +11,18 @@ export const GET: RequestHandler = async (event) => {
 	return json(allTags);
 };
 
+export const POST: RequestHandler = async (event) => {
+	const userId = getUserId(event);
+	const { name } = await event.request.json();
+	if (!name) return json({ error: 'name is required' }, { status: 400 });
+	const sanitized = name.trim().toLowerCase().replace(/[^a-z0-9-_]/g, '');
+	if (!sanitized) return json({ error: 'Invalid tag name' }, { status: 400 });
+	const existing = await db.select().from(tags).where(and(eq(tags.name, sanitized), eq(tags.userId, userId)));
+	if (existing.length > 0) return json({ ok: true, id: existing[0].id });
+	const result = await db.insert(tags).values({ name: sanitized, userId }).returning();
+	return json({ ok: true, id: result[0].id });
+};
+
 export const PATCH: RequestHandler = async (event) => {
 	const userId = getUserId(event);
 	const { id, name } = await event.request.json();

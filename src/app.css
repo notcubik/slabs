@@ -27,7 +27,6 @@
 	--success-text: #166534;
 	--card-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
 	--card-shadow-hover: 0 8px 24px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
-	--sidebar-bg: #F0F0F2;
 	--header-bg: rgba(244,244,245,0.82);
 	--note-default: #FFFFFF;
 	--ring: 0 0 0 2px var(--primary);
@@ -57,7 +56,6 @@
 	--success-text: #86EFAC;
 	--card-shadow: 0 1px 3px rgba(0,0,0,0.4);
 	--card-shadow-hover: 0 8px 24px rgba(0,0,0,0.5);
-	--sidebar-bg: #0E0E11;
 	--header-bg: rgba(9,9,11,0.82);
 	--note-default: #18181B;
 	--ring: 0 0 0 2px var(--primary);
@@ -109,7 +107,7 @@ body.editor-scroll-locked {
 }
 
 /* ═══════════════════════════════════════════════
-   SIDEBAR — pill-style selected nav items
+   SIDEBAR — accent-colored active nav items
    ═══════════════════════════════════════════════ */
 
 .sidebar-nav-item {
@@ -122,6 +120,7 @@ body.editor-scroll-locked {
 	font-weight: 500;
 	transition: all 150ms ease-out;
 	color: var(--text-muted);
+	border-left: 2px solid transparent;
 }
 
 .sidebar-nav-item:hover {
@@ -131,7 +130,8 @@ body.editor-scroll-locked {
 
 .sidebar-nav-item.active {
 	color: var(--primary);
-	background: var(--primary-muted);
+	background: var(--primary-subtle);
+	border-left-color: var(--primary);
 	font-weight: 600;
 }
 

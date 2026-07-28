@@ -6,7 +6,7 @@
 	import ImageLightbox from './ImageLightbox.svelte';
 	import SharingIndicator from './SharingIndicator.svelte';
 	import type { Note, NoteColor } from '$lib/types/index.js';
-	import { NOTE_COLORS } from '$lib/utils/colors.js';
+	import { NOTE_COLORS, getVividColor } from '$lib/utils/colors.js';
 	import Undo2 from 'lucide-svelte/icons/undo-2';
 	import Trash2 from 'lucide-svelte/icons/trash-2';
 	import Pin from 'lucide-svelte/icons/pin';
@@ -294,14 +294,15 @@
 						bind:this={colorPickerEl}
 						class="absolute bottom-full right-0 z-50 mb-2 flex gap-1 rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] p-2 shadow-[var(--card-shadow-hover)] anim-scale-in"
 					>
-						{#each Object.entries(NOTE_COLORS) as [value, { label, bg }]}
-							<button
-								onclick={(e) => { e.stopPropagation(); handleColorSelect(value as NoteColor); }}
-								class="h-6 w-6 rounded-full border-2 transition-transform hover:scale-110 {note.color === value ? 'border-[var(--primary)] scale-110' : 'border-[var(--border-subtle)]'}"
-								style="background-color: {bg}"
-								title={label}
-							></button>
-						{/each}
+					{#each Object.entries(NOTE_COLORS) as [value, { label }]}
+						{@const vivid = getVividColor(value as NoteColor, getIsDarkMode())}
+						<button
+							onclick={(e) => { e.stopPropagation(); handleColorSelect(value as NoteColor); }}
+							class="h-6 w-6 rounded-full border-2 transition-all duration-150 hover:scale-110 active:scale-95 {note.color === value ? 'ring-2 ring-offset-1 ring-[var(--primary)] scale-110' : 'border-[var(--border-subtle)]'}"
+							style="background-color: {vivid.bg}; border-color: {vivid.border};"
+							title={label}
+						></button>
+					{/each}
 					</div>
 				{/if}
 			</div>
