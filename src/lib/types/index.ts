@@ -10,6 +10,7 @@ export interface Note {
 	checklistMode: boolean;
 	sortOrder: number;
 	isHidden: boolean;
+	reminderAt: Date | null;
 	createdAt: Date;
 	updatedAt: Date;
 	version: number;
@@ -35,6 +36,7 @@ export interface NoteCreate {
 	pinned?: boolean;
 	checklistMode?: boolean;
 	tags?: string[];
+	reminderAt?: Date | null;
 }
 
 export interface NoteUpdate {
@@ -49,6 +51,7 @@ export interface NoteUpdate {
 	tags?: string[];
 	isHidden?: boolean;
 	hiddenPassword?: string;
+	reminderAt?: Date | null;
 }
 
 export interface Attachment {

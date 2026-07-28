@@ -120,7 +120,7 @@ body.editor-scroll-locked {
 	font-weight: 500;
 	transition: all 150ms ease-out;
 	color: var(--text-muted);
-	border-left: 2px solid transparent;
+	position: relative;
 }
 
 .sidebar-nav-item:hover {
@@ -131,8 +131,18 @@ body.editor-scroll-locked {
 .sidebar-nav-item.active {
 	color: var(--primary);
 	background: var(--primary-subtle);
-	border-left-color: var(--primary);
 	font-weight: 600;
+}
+
+.sidebar-nav-item.active::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 20%;
+	bottom: 20%;
+	width: 3px;
+	border-radius: 0 3px 3px 0;
+	background: var(--primary);
 }
 
 /* ═══════════════════════════════════════════════

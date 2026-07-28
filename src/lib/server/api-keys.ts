@@ -68,7 +68,8 @@ export function getUserForApiKey(
 			id: users.id,
 			email: users.email,
 			displayName: users.displayName,
-			role: users.role
+			role: users.role,
+			avatar: users.avatar
 		})
 		.from(users)
 		.where(eq(users.id, userId))

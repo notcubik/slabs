@@ -8,6 +8,7 @@ export const users = sqliteTable('users', {
 	passwordHash: text('password_hash'),
 	authProvider: text('auth_provider').notNull().default('password'),
 	providerId: text('provider_id'),
+	avatar: text('avatar'),
 	createdAt: integer('created_at', { mode: 'timestamp' }).notNull()
 });
 
@@ -42,6 +43,7 @@ export const notes = sqliteTable(
 		sortOrder: integer('sort_order').default(0).notNull(),
 		isHidden: integer('is_hidden', { mode: 'boolean' }).default(false).notNull(),
 		hiddenPasswordHash: text('hidden_password_hash'),
+		reminderAt: integer('reminder_at', { mode: 'timestamp' }),
 		createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 		updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
 		version: integer('version').default(1).notNull()

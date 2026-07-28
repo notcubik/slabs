@@ -21,6 +21,59 @@
 	let profileMsg = $state('');
 	let profileError = $state(false);
 
+	// Avatar state
+	let avatar = $state(data.user?.avatar || null);
+	let avatarUploading = $state(false);
+	let avatarInputEl = $state<HTMLInputElement | undefined>();
+
+	function getUserInitials(): string {
+		const name = data.user?.displayName || data.user?.email || '';
+		const parts = name.split(/[\s@]/).filter(Boolean);
+		return parts.length >= 2
+			? (parts[0][0] + parts[1][0]).toUpperCase()
+			: name.slice(0, 2).toUpperCase();
+	}
+
+	async function uploadAvatar(e: Event) {
+		const input = e.target as HTMLInputElement;
+		const file = input.files?.[0];
+		if (!file) return;
+		avatarUploading = true;
+		try {
+			const fd = new FormData();
+			fd.append('avatar', file);
+			const res = await fetch('/api/user/avatar', { method: 'POST', body: fd });
+			if (res.ok) {
+				const d = await res.json();
+				avatar = d.avatar;
+				avatarMsg = '';
+				avatarError = false;
+			} else {
+				const d = await res.json();
+				avatarMsg = d.error || 'Upload failed';
+				avatarError = true;
+			}
+		} catch {
+			avatarMsg = 'Connection error';
+			avatarError = true;
+		} finally {
+			avatarUploading = false;
+			if (avatarInputEl) avatarInputEl.value = '';
+		}
+	}
+
+	async function removeAvatar() {
+		try {
+			const res = await fetch('/api/user/avatar', { method: 'DELETE' });
+			if (res.ok) avatar = null;
+		} catch {
+			// ignore
+		}
+	}
+
+	let avatarMsg = $state('');
+	let avatarError = $state(false);
+
 	// Password state
 	let currentPassword = $state('');
 	let newPassword = $state('');
@@ -179,6 +232,47 @@
 <!-- Profile -->
 <section class="mb-6 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 shadow-[var(--card-shadow)]">
 	<h2 class="mb-4 text-lg font-semibold text-[var(--text)]">Profile</h2>
+
+	<!-- Avatar -->
+	<div class="mb-6 flex items-center gap-4">
+		<div class="relative group">
+			<div class="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-[var(--primary-subtle)] text-2xl font-bold text-[var(--primary)] border-2 border-[var(--border-subtle)]">
+				{#if avatar}
+					<img src="/api/user/avatar?userId={data.user?.id}" alt="" class="h-full w-full object-cover" />
+				{:else}
+					{getUserInitials()}
+				{/if}
+			</div>
+			<button
+				onclick={() => avatarInputEl?.click()}
+				class="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+				disabled={avatarUploading}
+			>
+				{avatarUploading ? '...' : 'Edit'}
+			</button>
+			<input
+				bind:this={avatarInputEl}
+				type="file"
+				accept="image/jpeg,image/png,image/webp,image/gif"
+				class="hidden"
+				onchange={uploadAvatar}
+			/>
+		</div>
+		<div>
+			<p class="text-sm font-medium text-[var(--text)]">Profile photo</p>
+			<p class="text-xs text-[var(--text-muted)]">JPG, PNG, WebP, or GIF. Max 2MB.</p>
+			{#if avatar}
+				<button onclick={removeAvatar} class="mt-1 text-xs text-[var(--destructive)] hover:underline">
+					Remove photo
+				</button>
+			{/if}
+		</div>
+	</div>
+	{#if avatarMsg}
+		<div class="mb-4 rounded-lg border p-3 text-sm {avatarError ? 'border-[var(--error-border)] bg-[var(--error-bg)] text-[var(--error-text)]' : 'border-[var(--success-bg)] bg-[var(--success-bg)] text-[var(--success-text)]'}">
+			{avatarMsg}
+		</div>
+	{/if}
 
 	{#if profileMsg}
 		<div class="mb-4 rounded-lg border p-3 text-sm {profileError ? 'border-[var(--error-border)] bg-[var(--error-bg)] text-[var(--error-text)]' : 'border-[var(--success-bg)] bg-[var(--success-bg)] text-[var(--success-text)]'}">

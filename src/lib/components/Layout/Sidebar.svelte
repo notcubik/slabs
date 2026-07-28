@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { allTags, selectedTag, currentFilter } from '$lib/stores/notes.js';
-	import { StickyNote, Archive, Trash2, Tag, Pencil, Check, X, Plus } from 'lucide-svelte';
+	import { allTags, selectedTag, currentFilter, loadNotes } from '$lib/stores/notes.js';
+	import { StickyNote, Archive, Trash2, Tag, Pencil, Check, X, Plus, Bell } from 'lucide-svelte';
 
 	interface Props {
 		open: boolean;
@@ -50,6 +50,7 @@
 		if (res.ok) {
 			editingTagId = null;
 			await loadTags();
+			await loadNotes();
 		}
 	}
 
@@ -66,6 +67,7 @@
 				return tag ? current.filter(t => t !== tag.name) : current;
 			});
 			await loadTags();
+			await loadNotes();
 		}
 	}
 
@@ -89,7 +91,8 @@
 	});
 
 	const navItems = [
-		{ href: '/', label: 'All Notes', icon: StickyNote, match: (p: string) => p === '/' },
+		{ href: '/', label: 'Notes', icon: StickyNote, match: (p: string) => p === '/' },
+		{ href: '/reminders', label: 'Reminders', icon: Bell, match: (p: string) => p === '/reminders' },
 		{ href: '/archive', label: 'Archive', icon: Archive, match: (p: string) => p === '/archive' },
 		{ href: '/trash', label: 'Trash', icon: Trash2, match: (p: string) => p === '/trash' }
 	];
@@ -105,7 +108,7 @@
 {/if}
 
 <aside
-	class="fixed left-0 top-14 z-20 h-[calc(100vh-3.5rem)] w-60 transform bg-[var(--bg-base)] transition-transform duration-200 ease-out {open ? 'translate-x-0' : '-translate-x-full'}"
+	class="fixed left-0 top-14 z-20 h-[calc(100vh-3.5rem)] w-64 transform bg-[var(--bg-base)] transition-transform duration-200 ease-out {open ? 'translate-x-0' : '-translate-x-full'}"
 >
 	<nav class="flex h-full flex-col p-3">
 		<ul class="space-y-0.5">

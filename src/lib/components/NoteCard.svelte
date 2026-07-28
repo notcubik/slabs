@@ -18,6 +18,7 @@
 	import Copy from 'lucide-svelte/icons/copy';
 	import Share2 from 'lucide-svelte/icons/share-2';
 	import Palette from 'lucide-svelte/icons/palette';
+	import Bell from 'lucide-svelte/icons/bell';
 	import { tooltip } from '$lib/utils/tooltip.js';
 	import { linkifyText } from '$lib/utils/checklist.js';
 
@@ -78,6 +79,7 @@
 	const isMedium = $derived(contentLength >= 120 && contentLength < 400);
 
 	const isHidden = $derived(note.isHidden ?? false);
+	const hasReminder = $derived(!!note.reminderAt);
 
 	function handleClick() {
 		if (isHidden && onUnlock) {
@@ -142,7 +144,7 @@
 
 <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
 <article
-	class="group relative cursor-pointer rounded-xl border border-[var(--border-subtle)] p-4 text-[var(--text)] outline-none transition-all duration-150 ease-out hover:border-[var(--primary)]/30 shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] hover:scale-[1.01] overflow-hidden flex flex-col anim-pop-in {fullHeight ? 'h-full' : ''} {isCompact ? 'min-h-[6rem]' : isMedium ? 'min-h-[10rem]' : 'min-h-[14rem]'}"
+	class="group relative cursor-pointer rounded-xl border border-[var(--border-subtle)] p-4 text-[var(--text)] outline-none transition-all duration-150 ease-out shadow-[var(--card-shadow)] hover:shadow-[var(--card-shadow-hover)] hover:scale-[1.01] overflow-hidden flex flex-col anim-pop-in {fullHeight ? 'h-full' : ''} {isCompact ? 'min-h-[6rem]' : isMedium ? 'min-h-[10rem]' : 'min-h-[14rem]'}"
 	style={cardStyle}
 	onclick={handleClick}
 	onkeydown={handleKeydown}
@@ -181,6 +183,11 @@
 
 	<!-- Status indicators (top-right) -->
 	<div class="absolute top-2 right-2 flex items-center gap-0.5">
+		{#if hasReminder}
+			<span class="rounded-lg p-1 text-[var(--primary)]" use:tooltip={"Has reminder"}>
+				<Bell class="h-3.5 w-3.5" />
+			</span>
+		{/if}
 		{#if isHidden}
 			<span class="rounded-lg p-1 text-[var(--text-muted)]" use:tooltip={"Hidden"}>
 				<Lock class="h-3.5 w-3.5" />

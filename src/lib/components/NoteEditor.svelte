@@ -38,6 +38,8 @@
 	import Lock from 'lucide-svelte/icons/lock';
 	import LockOpen from 'lucide-svelte/icons/lock-open';
 	import ArrowLeft from 'lucide-svelte/icons/arrow-left';
+	import Bell from 'lucide-svelte/icons/bell';
+	import BellOff from 'lucide-svelte/icons/bell-off';
 	import { parseChecklist, serializeChecklist } from '$lib/utils/checklist.js';
 	import { tooltip } from '$lib/utils/tooltip.js';
 
@@ -61,6 +63,10 @@
 	let checklistMode = $state(note?.checklistMode ?? initialChecklistMode);
 	// svelte-ignore state_referenced_locally
 	let noteTags = $state<string[]>(note?.tags ?? []);
+	let reminderAt = $state<Date | null>(note?.reminderAt ?? null);
+	let showReminderPicker = $state(false);
+	let reminderDateStr = $state(note?.reminderAt ? new Date(note.reminderAt).toISOString().slice(0, 10) : '');
+	let reminderTimeStr = $state(note?.reminderAt ? new Date(note.reminderAt).toISOString().slice(11, 16) : '');
 	let showColorPicker = $state(false);
 	let showImageUpload = $state(false);
 	// svelte-ignore state_referenced_locally
@@ -97,7 +103,8 @@
 			content !== lastSavedContent ||
 			color !== lastSavedColor ||
 			checklistMode !== lastSavedChecklistMode ||
-			JSON.stringify(noteTags) !== JSON.stringify(lastSavedTags)
+			JSON.stringify(noteTags) !== JSON.stringify(lastSavedTags) ||
+			JSON.stringify(reminderAt) !== JSON.stringify(note?.reminderAt ?? null)
 		);
 	}
 
@@ -105,14 +112,15 @@
 		if (isSaving) return;
 		saveStatus = 'saving';
 		// Snapshot current fields to avoid races with user edits during await
-		const snap = { title, content, color, checklistMode, tags: noteTags };
+		const snap = { title, content, color, checklistMode, tags: noteTags, reminderAt };
 		if (!snap.title.trim() && !snap.content.trim()) { saveStatus = 'unsaved'; return; }
 		if (
 			snap.title === lastSavedTitle &&
 			snap.content === lastSavedContent &&
 			snap.color === lastSavedColor &&
 			snap.checklistMode === lastSavedChecklistMode &&
-			JSON.stringify(snap.tags) === JSON.stringify(lastSavedTags)
+			JSON.stringify(snap.tags) === JSON.stringify(lastSavedTags) &&
+			JSON.stringify(snap.reminderAt) === JSON.stringify(note?.reminderAt ?? null)
 		) { saveStatus = 'saved'; return; }
 
 		isSaving = true;
@@ -153,6 +161,7 @@
 		const _col = color;
 		const _cm = checklistMode;
 		const _tags = JSON.stringify(noteTags);
+		const _rem = JSON.stringify(reminderAt);
 
 		if (!autoSaveReady) {
 			// Absorb TiptapEditor's initial content normalization as the baseline
@@ -161,7 +170,7 @@
 			return;
 		}
 
-		if (_t === lastSavedTitle && _c === lastSavedContent && _col === lastSavedColor && _cm === lastSavedChecklistMode && _tags === JSON.stringify(lastSavedTags)) {
+		if (_t === lastSavedTitle && _c === lastSavedContent && _col === lastSavedColor && _cm === lastSavedChecklistMode && _tags === JSON.stringify(lastSavedTags) && _rem === JSON.stringify(note?.reminderAt ?? null)) {
 			saveStatus = 'saved';
 			return;
 		}
@@ -957,6 +966,70 @@
 					Version history
 				</button>
 			{/if}
+
+			<!-- Reminder -->
+			<div class="relative">
+				<button
+					onclick={() => { showReminderPicker = !showReminderPicker; }}
+					class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-[var(--text)] hover:bg-[var(--border)]/10"
+					data-testid="reminder-toggle"
+				>
+					{#if reminderAt}
+						<Bell class="h-4 w-4 text-[var(--primary)]" />
+						<span>Reminder: {new Date(reminderAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} {new Date(reminderAt).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}</span>
+					{:else}
+						<Bell class="h-4 w-4" />
+						Set reminder
+					{/if}
+				</button>
+				{#if showReminderPicker}
+					<div class="px-3 py-2 anim-scale-in">
+						<div class="flex items-center gap-2">
+							<input
+								type="date"
+								bind:value={reminderDateStr}
+								class="flex-1 rounded-md border border-[var(--border)] bg-[var(--bg-base)] px-2 py-1.5 text-xs text-[var(--text)] outline-none focus:border-[var(--primary)]"
+							/>
+							<input
+								type="time"
+								bind:value={reminderTimeStr}
+								class="rounded-md border border-[var(--border)] bg-[var(--bg-base)] px-2 py-1.5 text-xs text-[var(--text)] outline-none focus:border-[var(--primary)]"
+							/>
+						</div>
+						<div class="mt-2 flex gap-1">
+							<button
+								onclick={() => {
+									if (reminderDateStr && reminderTimeStr) {
+										reminderAt = new Date(`${reminderDateStr}T${reminderTimeStr}`);
+									} else if (reminderDateStr) {
+										reminderAt = new Date(`${reminderDateStr}T09:00`);
+									}
+									showReminderPicker = false;
+									showOverflowMenu = false;
+								}}
+								class="rounded-md bg-[var(--primary)] px-2 py-1 text-xs font-medium text-white hover:bg-[var(--primary-hover)]"
+							>
+								Set
+							</button>
+							{#if reminderAt}
+								<button
+									onclick={() => { reminderAt = null; showReminderPicker = false; showOverflowMenu = false; }}
+									class="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-[var(--destructive)] hover:bg-[var(--error-bg)]"
+								>
+									<BellOff class="h-3 w-3" />
+									Clear
+								</button>
+							{/if}
+							<button
+								onclick={() => { showReminderPicker = false; }}
+								class="rounded-md px-2 py-1 text-xs text-[var(--text-muted)] hover:bg-[var(--border)]/10"
+							>
+								Cancel
+							</button>
+						</div>
+					</div>
+				{/if}
+			</div>
 
 			<!-- Hide/Unhide (only for saved notes, owner only) -->
 			{#if !currentlyNew && isOwner}

@@ -7,7 +7,7 @@ import type { User } from '$lib/types/index.js';
 
 const SESSION_DURATION_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 
-type SessionUser = { id: number; email: string; displayName: string; role: 'admin' | 'user' };
+type SessionUser = { id: number; email: string; displayName: string; role: 'admin' | 'user'; avatar?: string | null };
 
 function toUser(row: typeof users.$inferSelect): User {
 	return {
@@ -93,7 +93,7 @@ export async function validateSession(
 	// Join sessions with users to get user data in one query
 	const result = sqlite
 		.prepare(
-			`SELECT s.id as session_id, s.expires_at, u.id, u.email, u.display_name, u.role
+			`SELECT s.id as session_id, s.expires_at, u.id, u.email, u.display_name, u.role, u.avatar
 			 FROM sessions s
 			 JOIN users u ON s.user_id = u.id
 			 WHERE s.id = ?`
@@ -106,6 +106,7 @@ export async function validateSession(
 				email: string;
 				display_name: string;
 				role: 'admin' | 'user';
+				avatar: string | null;
 		  }
 		| undefined;
 
@@ -128,7 +129,8 @@ export async function validateSession(
 			id: result.id,
 			email: result.email,
 			displayName: result.display_name,
-			role: result.role
+			role: result.role,
+			avatar: result.avatar
 		}
 	};
 }

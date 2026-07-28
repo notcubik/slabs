@@ -180,6 +180,7 @@ export async function createNote(note: NoteCreate): Promise<Note | null> {
 				checklistMode: note.checklistMode ?? false,
 				sortOrder: 0,
 				isHidden: false,
+				reminderAt: null,
 				createdAt: now,
 				updatedAt: now,
 				version: 1,

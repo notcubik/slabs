@@ -7,7 +7,7 @@
 
 	interface Props {
 		onMenuToggle: () => void;
-		user?: { displayName?: string | null; email?: string; role?: string } | null;
+		user?: { id?: number; displayName?: string | null; email?: string; role?: string; avatar?: string | null } | null;
 	}
 
 	let { onMenuToggle, user = null }: Props = $props();
@@ -59,15 +59,19 @@
 			>
 				<Settings class="h-5 w-5" />
 			</a>
-			{#if user}
-				<a
-					href="/settings/profile"
-					class="ml-1 flex h-8 w-8 items-center justify-center rounded-full bg-[var(--primary-subtle)] text-xs font-semibold text-[var(--primary)] transition-all duration-150 hover:bg-[var(--primary-muted)] hover:shadow-md active:scale-95"
-					aria-label="Profile"
-				>
+		{#if user}
+			<a
+				href="/settings/profile"
+				class="ml-1 flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-[var(--primary-subtle)] text-xs font-semibold text-[var(--primary)] transition-all duration-150 hover:shadow-md active:scale-95"
+				aria-label="Profile"
+			>
+				{#if user.avatar}
+					<img src="/api/user/avatar?userId={user.id}" alt="" class="h-full w-full object-cover" />
+				{:else}
 					{userInitials()}
-				</a>
-			{/if}
+				{/if}
+			</a>
+		{/if}
 		</div>
 	{/if}
 </header>

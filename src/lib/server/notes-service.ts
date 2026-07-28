@@ -26,6 +26,7 @@ interface NoteRow {
 	checklistMode: boolean;
 	sortOrder: number;
 	isHidden: boolean;
+	reminderAt: Date | null;
 	createdAt: Date;
 	updatedAt: Date;
 	version: number;
@@ -177,6 +178,7 @@ export interface CreateNoteInput {
 	checklistMode?: boolean;
 	sortOrder?: number;
 	tags?: string[];
+	reminderAt?: Date | null;
 }
 
 export function createNote(db: Db, userId: number, input: CreateNoteInput) {
@@ -196,6 +198,7 @@ export function createNote(db: Db, userId: number, input: CreateNoteInput) {
 		checklistMode: input.checklistMode || false,
 		sortOrder: input.sortOrder || 0,
 		isHidden: false,
+		reminderAt: input.reminderAt ?? null,
 		createdAt: now,
 		updatedAt: now,
 		version: 1
@@ -226,6 +229,7 @@ export interface UpdateNoteInput {
 	tags?: string[];
 	isHidden?: boolean;
 	hiddenPassword?: string;
+	reminderAt?: Date | null;
 }
 
 /** Per-user fields that go to noteUserState for collaborators */
@@ -275,6 +279,7 @@ export async function updateNote(db: Db, userId: number, id: string, input: Upda
 	}
 	if (input.color !== undefined) { sharedUpdates.color = input.color; hasSharedUpdates = true; }
 	if (input.checklistMode !== undefined) { sharedUpdates.checklistMode = input.checklistMode; hasSharedUpdates = true; }
+	if (input.reminderAt !== undefined) { sharedUpdates.reminderAt = input.reminderAt; hasSharedUpdates = true; }
 
 	if (isOwner) {
 		// Owner: per-user fields go to notes table directly

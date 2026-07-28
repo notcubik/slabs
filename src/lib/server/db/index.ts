@@ -259,6 +259,16 @@ try {
 } catch {
 	// Column already exists
 }
+try {
+	sqlite.exec(`ALTER TABLE users ADD COLUMN avatar TEXT;`);
+} catch {
+	// Column already exists
+}
+try {
+	sqlite.exec(`ALTER TABLE notes ADD COLUMN reminder_at INTEGER;`);
+} catch {
+	// Column already exists
+}
 
 // Migration: make password_hash nullable (for OAuth-only users)
 const pwCol = (
