@@ -108,7 +108,7 @@
 {/if}
 
 <aside
-	class="fixed left-0 top-14 z-20 h-[calc(100vh-3.5rem)] w-64 transform bg-[var(--bg-base)] transition-transform duration-200 ease-out {open ? 'translate-x-0' : '-translate-x-full'}"
+	class="fixed left-0 top-14 z-20 h-[calc(100vh-3.5rem)] w-72 transform bg-[var(--bg-base)] transition-transform duration-200 ease-out {open ? 'translate-x-0' : '-translate-x-full'}"
 >
 	<nav class="flex h-full flex-col p-3">
 		<ul class="space-y-0.5">

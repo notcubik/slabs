@@ -14,9 +14,9 @@
 	<div class="space-y-3">
 		<span class="block text-sm font-semibold text-[var(--text)]">Theme</span>
 		<div class="flex gap-1 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-1" role="group" aria-label="Theme">
-			{#each [['system', 'System'], ['light', 'Light'], ['dark', 'Dark']] as [value, label]}
+			{#each [['system', 'System'], ['light', 'Light'], ['dark', 'Dark'], ['dark-contrast', 'Dark contrast']] as [value, label]}
 				<button
-					onclick={() => updatePreference('theme', value as 'system' | 'light' | 'dark')}
+					onclick={() => updatePreference('theme', value as 'system' | 'light' | 'dark' | 'dark-contrast')}
 					class="flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors {prefs.theme === value ? 'bg-[var(--primary)] text-white shadow-sm' : 'text-[var(--text-muted)] hover:text-[var(--text)]'}"
 					data-testid="pref-theme-{value}"
 				>
@@ -60,6 +60,36 @@
 			selected={prefs.defaultNoteColor}
 			onSelect={(color: NoteColor) => updatePreference('defaultNoteColor', color)}
 		/>
+	</div>
+
+	<!-- Date format -->
+	<div class="space-y-3">
+		<span class="block text-sm font-semibold text-[var(--text)]">Date format</span>
+		<div class="flex gap-1 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-1" role="group" aria-label="Date format">
+			{#each [['MM/DD/YYYY', '12/31/2024'], ['DD/MM/YYYY', '31/12/2024'], ['YYYY-MM-DD', '2024-12-31']] as [value, example]}
+				<button
+					onclick={() => updatePreference('dateFormat', value as 'MM/DD/YYYY' | 'DD/MM/YYYY' | 'YYYY-MM-DD')}
+					class="flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors {prefs.dateFormat === value ? 'bg-[var(--primary)] text-white shadow-sm' : 'text-[var(--text-muted)] hover:text-[var(--text)]'}"
+				>
+					{example}
+				</button>
+			{/each}
+		</div>
+	</div>
+
+	<!-- Time format -->
+	<div class="space-y-3">
+		<span class="block text-sm font-semibold text-[var(--text)]">Time format</span>
+		<div class="flex gap-1 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-1" role="group" aria-label="Time format">
+			{#each [['12h', '2:30 PM'], ['24h', '14:30']] as [value, example]}
+				<button
+					onclick={() => updatePreference('timeFormat', value as '12h' | '24h')}
+					class="flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors {prefs.timeFormat === value ? 'bg-[var(--primary)] text-white shadow-sm' : 'text-[var(--text-muted)] hover:text-[var(--text)]'}"
+				>
+					{example}
+				</button>
+			{/each}
+		</div>
 	</div>
 
 	<!-- Toggles -->

@@ -2,7 +2,8 @@ import { browser } from '$app/environment';
 import type { AccentColor } from '$lib/types/preferences.js';
 
 const LIGHT_THEME_COLOR = '#F4F4F5';
-const DARK_THEME_COLOR = '#09090B';
+const DARK_THEME_COLOR = '#0F1117';
+const DARK_CONTRAST_THEME_COLOR = '#09090B';
 
 let darkMode = $state(false);
 
@@ -10,14 +11,15 @@ export function getIsDarkMode(): boolean {
 	return darkMode;
 }
 
-export function applyTheme(theme: 'system' | 'light' | 'dark'): void {
+export function applyTheme(theme: 'system' | 'light' | 'dark' | 'dark-contrast'): void {
 	if (!browser) return;
 
-	if (theme !== 'system' && theme !== 'light' && theme !== 'dark') {
+	const validThemes = ['system', 'light', 'dark', 'dark-contrast'] as const;
+	if (!validThemes.includes(theme as typeof validThemes[number])) {
 		theme = 'system';
 	}
 
-	let resolved = theme;
+	let resolved: 'light' | 'dark' | 'dark-contrast' = theme as 'light' | 'dark' | 'dark-contrast';
 	if (theme === 'system') {
 		const prefersDark =
 			typeof window.matchMedia === 'function' &&
@@ -25,18 +27,19 @@ export function applyTheme(theme: 'system' | 'light' | 'dark'): void {
 		resolved = prefersDark ? 'dark' : 'light';
 	}
 
-	const isDark = resolved === 'dark';
+	const isDark = resolved !== 'light';
 	darkMode = isDark;
 
-	if (isDark) {
-		document.documentElement.setAttribute('data-theme', 'dark');
-	} else {
+	if (resolved === 'light') {
 		document.documentElement.removeAttribute('data-theme');
+	} else {
+		document.documentElement.setAttribute('data-theme', resolved);
 	}
 
+	const color = resolved === 'dark-contrast' ? DARK_CONTRAST_THEME_COLOR : isDark ? DARK_THEME_COLOR : LIGHT_THEME_COLOR;
 	const meta = document.querySelector('meta[name="theme-color"]');
 	if (meta) {
-		meta.setAttribute('content', isDark ? DARK_THEME_COLOR : LIGHT_THEME_COLOR);
+		meta.setAttribute('content', color);
 	}
 }
 

@@ -1,11 +1,14 @@
 <script lang="ts">
-	import { notes } from '$lib/stores/notes.js';
+	import { notes, loadNotes } from '$lib/stores/notes.js';
 	import { getNoteColor, getVividColor } from '$lib/utils/colors.js';
 	import { getIsDarkMode } from '$lib/utils/theme.svelte.js';
+	import { formatDate, formatTime, formatDateTime } from '$lib/utils/format.svelte.js';
+	import { onMount } from 'svelte';
 	import ChevronLeft from 'lucide-svelte/icons/chevron-left';
 	import ChevronRight from 'lucide-svelte/icons/chevron-right';
 	import Bell from 'lucide-svelte/icons/bell';
 	import Calendar from 'lucide-svelte/icons/calendar';
+	import Clock from 'lucide-svelte/icons/clock';
 
 	let currentMonth = $state(new Date().getMonth());
 	let currentYear = $state(new Date().getFullYear());
@@ -70,13 +73,16 @@
 		return day === now.getDate() && currentMonth === now.getMonth() && currentYear === now.getFullYear();
 	}
 
-	function formatReminderTime(date: Date) {
-		return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+	function isOverdue(date: Date) {
+		return new Date(date) < new Date();
 	}
 
 	const selectedDateNotes = $derived(selectedDate ? notesForDate(selectedDate) : []);
-
 	const isDark = $derived(getIsDarkMode());
+
+	onMount(() => {
+		loadNotes();
+	});
 </script>
 
 <svelte:head>
@@ -144,7 +150,7 @@
 			</div>
 		</div>
 
-		<!-- Sidebar: selected date or upcoming -->
+		<!-- Sidebar: selected date or overview -->
 		<div class="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 shadow-[var(--card-shadow)]">
 			{#if selectedDate}
 				<h3 class="mb-3 text-sm font-semibold text-[var(--text)] flex items-center gap-1.5">
@@ -163,8 +169,9 @@
 							>
 								<p class="text-sm font-medium text-[var(--text)] truncate">{n.title || 'Untitled'}</p>
 								{#if n.reminderAt}
-									<p class="mt-1 text-[10px] text-[var(--text-muted)]">
-										{formatReminderTime(new Date(n.reminderAt))}
+									<p class="mt-1 text-[10px] text-[var(--text-muted)] flex items-center gap-1">
+										<Clock class="h-3 w-3" />
+										{formatTime(new Date(n.reminderAt))}
 									</p>
 								{/if}
 							</a>
@@ -172,12 +179,45 @@
 					</div>
 				{/if}
 			{:else}
-				<h3 class="mb-3 text-sm font-semibold text-[var(--text)]">Upcoming</h3>
+				<!-- Overdue reminders -->
+				{@const overdue = reminderNotes
+					.filter((n) => n.reminderAt && isOverdue(n.reminderAt))
+					.sort((a, b) => new Date(b.reminderAt!).getTime() - new Date(a.reminderAt!).getTime())
+					.slice(0, 4)}
 				{@const upcoming = reminderNotes
-					.filter((n) => n.reminderAt && new Date(n.reminderAt) >= new Date())
+					.filter((n) => n.reminderAt && !isOverdue(n.reminderAt))
 					.sort((a, b) => new Date(a.reminderAt!).getTime() - new Date(b.reminderAt!).getTime())
 					.slice(0, 8)}
-				{#if upcoming.length === 0}
+
+				{#if overdue.length > 0}
+					<h3 class="mb-3 text-sm font-semibold text-[var(--destructive)] flex items-center gap-1.5">
+						<Bell class="h-4 w-4" />
+						Overdue ({overdue.length})
+					</h3>
+					<div class="space-y-2 mb-5">
+						{#each overdue as n}
+							<a
+								href="/?note={n.id}"
+								class="block rounded-lg border border-[var(--destructive)]/20 p-3 hover:shadow-[var(--card-shadow-hover)] transition-shadow"
+								style="background-color: {getNoteColor(n.color, isDark)}"
+							>
+								<p class="text-sm font-medium text-[var(--text)] truncate">{n.title || 'Untitled'}</p>
+								{#if n.reminderAt}
+									<p class="mt-1 text-[10px] text-[var(--destructive)]">{formatDateTime(new Date(n.reminderAt))}</p>
+								{/if}
+							</a>
+						{/each}
+					</div>
+					<div class="my-3 border-t border-[var(--border-subtle)]"></div>
+				{/if}
+
+				<h3 class="mb-3 text-sm font-semibold text-[var(--text)] flex items-center gap-1.5">
+					<Clock class="h-4 w-4 text-[var(--primary)]" />
+					Upcoming
+				</h3>
+				{#if upcoming.length === 0 && overdue.length === 0}
+					<p class="text-xs text-[var(--text-muted)]">No reminders set</p>
+				{:else if upcoming.length === 0}
 					<p class="text-xs text-[var(--text-muted)]">No upcoming reminders</p>
 				{:else}
 					<div class="space-y-2">
@@ -189,9 +229,7 @@
 							>
 								<p class="text-sm font-medium text-[var(--text)] truncate">{n.title || 'Untitled'}</p>
 								{#if n.reminderAt}
-									<p class="mt-1 text-[10px] text-[var(--text-muted)]">
-										{new Date(n.reminderAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} at {formatReminderTime(new Date(n.reminderAt))}
-									</p>
+									<p class="mt-1 text-[10px] text-[var(--text-muted)]">{formatDateTime(new Date(n.reminderAt))}</p>
 								{/if}
 							</a>
 						{/each}

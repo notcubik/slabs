@@ -1,9 +1,12 @@
 import type { NoteColor } from './index.js';
 
 export type AccentColor = 'slates' | 'amber' | 'emerald' | 'ocean' | 'rose' | 'violet';
+export type ThemeValue = 'system' | 'light' | 'dark' | 'dark-contrast';
+export type DateFormat = 'MM/DD/YYYY' | 'DD/MM/YYYY' | 'YYYY-MM-DD';
+export type TimeFormat = '12h' | '24h';
 
 export interface UserPreferences {
-	theme: 'system' | 'light' | 'dark';
+	theme: ThemeValue;
 	accentColor: AccentColor;
 	defaultNoteMode: 'richtext' | 'markdown';
 	defaultNoteColor: NoteColor;
@@ -12,6 +15,8 @@ export interface UserPreferences {
 	notifyOnShare: boolean;
 	notifyOnCollabRemoved: boolean;
 	notifyOnNoteDeleted: boolean;
+	dateFormat: DateFormat;
+	timeFormat: TimeFormat;
 }
 
 export const DEFAULT_PREFERENCES: UserPreferences = {
@@ -23,7 +28,9 @@ export const DEFAULT_PREFERENCES: UserPreferences = {
 	sidebarDefaultState: 'open',
 	notifyOnShare: true,
 	notifyOnCollabRemoved: true,
-	notifyOnNoteDeleted: true
+	notifyOnNoteDeleted: true,
+	dateFormat: 'MM/DD/YYYY',
+	timeFormat: '12h'
 };
 
 export const BOOLEAN_PREF_KEYS: ReadonlySet<keyof UserPreferences> = new Set([
