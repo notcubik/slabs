@@ -6,13 +6,16 @@ describe('preferences defaults', () => {
 		expect(DEFAULT_PREFERENCES).toEqual({
 			theme: 'system',
 			accentColor: 'slates',
+			customAccentColor: '#6366F1',
 			defaultNoteMode: 'richtext',
 			defaultNoteColor: 'default',
 			hideFooter: false,
 			sidebarDefaultState: 'open',
 			notifyOnShare: true,
 			notifyOnCollabRemoved: true,
-			notifyOnNoteDeleted: true
+			notifyOnNoteDeleted: true,
+			dateFormat: 'MM/DD/YYYY',
+			timeFormat: '12h'
 		});
 	});
 

@@ -38,7 +38,7 @@ describe('applyTheme', () => {
 	it('updates meta theme-color for dark mode', () => {
 		applyTheme('dark');
 		const meta = document.querySelector('meta[name="theme-color"]');
-		expect(meta?.getAttribute('content')).toBe('#09090B');
+		expect(meta?.getAttribute('content')).toBe('#1A1C23');
 	});
 
 	it('updates meta theme-color for light mode', () => {
