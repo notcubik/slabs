@@ -12,7 +12,7 @@
 <p align="center">
   <a href="https://github.com/notcubik/slabs/actions/workflows/ci.yml"><img src="https://github.com/notcubik/slabs/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-yellow.svg" alt="License: MIT"></a>
-  <a href="https://github.com/notcubik/slabs/releases"><img src="https://img.shields.io/github/v/release/notcubik/slabs" alt="Version"></a>
+  <a href="https://github.com/notcubik/slabs/tags"><img src="https://img.shields.io/github/v/tag/notcubik/slabs" alt="Version"></a>
 </p>
 
 ---
